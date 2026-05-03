@@ -1,0 +1,138 @@
+/* Design Tokens из Figma файла Inspire */
+/* Все названия переменных сохранены как в Figma */
+
+/* ============================================
+   COLORS - Цвета из Figma Variables
+   ============================================ */
+
+:root {
+  /* Основные цвета */
+  --black: #212121;
+  --White: #fefefe;
+  --dark_grey: #f0f0f0;
+  --snow_white: #ffffff;
+  
+  /* Дополнительные цвета из компонентов */
+  --color-424242: #424242;
+  --color-a3a3a3: #a3a3a3;
+  --color-f2f2f2: #f2f2f2;
+  --color-171615: #171615;
+  --color-d6d6d6: #d6d6d6;
+  --color-151515: #151515;
+  --color-f6f4f0: #f6f4f0;
+}
+
+/* ============================================
+   TYPOGRAPHY - Шрифты из Figma Variables
+   ============================================ */
+
+/* 12/semi_bold */
+.font-12-semi-bold {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  font-style: normal;
+  line-height: 100%;
+  letter-spacing: 0;
+}
+
+/* 14/semi_bold */
+.font-14-semi-bold {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  font-style: normal;
+  line-height: 139.9999976158142%;
+  letter-spacing: 0;
+}
+
+/* 14/medium */
+.font-14-medium {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  font-style: normal;
+  line-height: 139.9999976158142%;
+  letter-spacing: 0;
+}
+
+/* 24/regular */
+.font-24-regular {
+  font-family: 'Inter', sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  font-style: normal;
+  line-height: 100%;
+  letter-spacing: 0;
+}
+
+/* CSS Variables для типографики */
+:root {
+  --font-12-semi-bold-family: 'Inter', sans-serif;
+  --font-12-semi-bold-size: 12px;
+  --font-12-semi-bold-weight: 600;
+  --font-12-semi-bold-line-height: 100%;
+  --font-12-semi-bold-letter-spacing: 0;
+  
+  --font-14-semi-bold-family: 'Inter', sans-serif;
+  --font-14-semi-bold-size: 14px;
+  --font-14-semi-bold-weight: 600;
+  --font-14-semi-bold-line-height: 139.9999976158142%;
+  --font-14-semi-bold-letter-spacing: 0;
+  
+  --font-14-medium-family: 'Inter', sans-serif;
+  --font-14-medium-size: 14px;
+  --font-14-medium-weight: 500;
+  --font-14-medium-line-height: 139.9999976158142%;
+  --font-14-medium-letter-spacing: 0;
+  
+  --font-24-regular-family: 'Inter', sans-serif;
+  --font-24-regular-size: 24px;
+  --font-24-regular-weight: 400;
+  --font-24-regular-line-height: 100%;
+  --font-24-regular-letter-spacing: 0;
+}
+
+/* ============================================
+   EFFECTS - Эффекты из Figma Variables
+   ============================================ */
+
+:root {
+  /* drop - Drop Shadow */
+  --drop-shadow: 0px 4px 39.5px 0px rgba(0, 0, 0, 0.25);
+  --drop-shadow-color: rgba(0, 0, 0, 0.25);
+  --drop-shadow-offset-x: 0;
+  --drop-shadow-offset-y: 4;
+  --drop-shadow-radius: 39.5;
+  --drop-shadow-spread: 0;
+}
+
+/* ============================================
+   SPACING - Отступы (из компонентов)
+   ============================================ */
+
+:root {
+  --spacing-4: 4px;
+  --spacing-5: 5px;
+  --spacing-6: 6px;
+  --spacing-10: 10px;
+  --spacing-14: 14px;
+  --spacing-15: 15px;
+  --spacing-20: 20px;
+  --spacing-26: 26px;
+  --spacing-34: 34px;
+  --spacing-40: 40px;
+}
+
+/* ============================================
+   BORDER RADIUS - Скругления
+   ============================================ */
+
+:root {
+  --radius-4: 4px;
+  --radius-5: 5px;
+  --radius-6: 6px;
+  --radius-10: 10px;
+  --radius-11: 11px;
+}
+

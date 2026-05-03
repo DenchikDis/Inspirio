@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <title>Project Details - I.N.S.P.I.R.I.O</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Roboto+Flex:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../design-tokens.css">
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="../supabase-config.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--White, #fefefe);
+            color: var(--black, #212121);
+            position: relative;
+        }
+
+        /* Header */
+        .main-header {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 410px;
+            height: 71px;
+            z-index: 100;
+        }
+
+        .header-content {
+            position: absolute;
+            top: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--White, #fefefe);
+            padding: 6px;
+            border-radius: 10px;
+            box-shadow: var(--drop-shadow);
+            width: 398px;
+        }
+
+        .header-main {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 5.735px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logo-container:hover {
+            opacity: 0.8;
+        }
+
+        .logo-icon {
+            width: 25.807px;
+            height: 25.807px;
+            background: var(--color-151515, #151515);
+            border-radius: 1.898px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-icon::before {
+            content: '';
+            position: absolute;
+            left: 7.82px;
+            top: 4.93px;
+            width: 10.095px;
+            height: 15.104px;
+            background: white;
+            border-radius: 2.805px;
+        }
+
+        .logo-text {
+            font-family: 'Roboto Flex', sans-serif;
+            font-size: 30.324px;
+            font-weight: 400;
+            color: var(--color-151515, #151515);
+            letter-spacing: -1.2129px;
+        }
+
+        .header-button {
+            background: var(--color-171615, #171615);
+            color: var(--color-f6f4f0, #f6f4f0);
+            padding: 14px 20px;
+            border-radius: 10px;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: var(--drop-shadow);
+            transition: opacity 0.3s ease;
+        }
+
+        .header-button:hover {
+            opacity: 0.9;
+        }
+
+        /* Main Content */
+        .eternal-page {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background-color: var(--White, #fefefe);
+        }
+
+        /* Combined Container for project-main-container and show-more-header */
+        .project-main-wrapper {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 101px;
+            width: 819px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 60px;
+        }
+
+        /* Project Main Container */
+        .project-main-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        /* Project Header Container */
+        .project-header-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* Project Title */
+        .project-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 48px;
+            font-weight: 400;
+            line-height: 1.1;
+            color: var(--black, #212121);
+            white-space: nowrap;
+            text-align: center;
+            width: 100%;
+        }
+
+        /* Info Section */
+        .info-section {
+            width: 100%;
+            height: 103px;
+            background: var(--dark_grey, #f0f0f0);
+            border-radius: 8px;
+            padding: 15px 13px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .info-content {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            width: 100%;
+            height: 100%;
+        }
+
+        .creator-info {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            width: 181px;
+        }
+
+        .creator-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 4px;
+            flex-shrink: 0;
+            overflow: hidden;
+            background: var(--dark_grey, #f0f0f0);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .creator-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .creator-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 84px;
+        }
+
+        .creator-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            line-height: normal;
+            color: var(--black, #212121);
+            width: 100%;
+        }
+
+        .creator-name {
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            line-height: normal;
+            color: var(--black, #212121);
+            width: 100%;
+        }
+
+        .info-categories {
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+        }
+
+        .info-category {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: flex-start;
+            width: 87px;
+        }
+
+        .info-category-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.4;
+            color: var(--black, #212121);
+            width: 100%;
+        }
+
+        .info-category-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1.4;
+            color: var(--black, #212121);
+            white-space: nowrap;
+            width: 100%;
+        }
+
+        /* Project Cards Container */
+        .project-cards-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* Project Cards */
+        .project-card {
+            width: 819px;
+            height: 612px;
+            border-radius: 11px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.08);
+            background: var(--White, #fefefe);
+            position: relative;
+        }
+
+        .project-card-image {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 11px;
+            z-index: 0;
+        }
+
+        .project-card-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(26, 26, 26, 0.65);
+            border-radius: 11px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Show More Section */
+        .show-more-section {
+            position: absolute;
+            left: 0;
+            top: 1935px; /* 293px (top) + 612px (card1) + 10px (gap) + 612px (card2) + 408px (spacing) */
+            width: 1440px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+            padding: 20px 0;
+        }
+                
+        .show-more-header {
+            position: relative;
+            width: 100%;
+            max-width: 1440px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            gap: 110px;
+            padding: 0;
+        }
+
+        .show-more-button-container {
+            height: 26px;
+            position: relative;
+            display: flex;
+            justify-content: flex-start;
+            flex-shrink: 0;
+            padding-left: 20px;
+        }
+
+        .show-more-button {
+            height: 26px;
+            width: 85px;
+        }
+
+        .show-more-button button {
+            background: var(--black, #212121);
+            color: var(--White, #fefefe);
+            border: none;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            line-height: normal;
+            cursor: pointer;
+            white-space: nowrap;
+            width: 100%;
+            height: 100%;
+            transition: opacity 0.3s ease;
+        }
+
+        .show-more-button button:hover {
+            opacity: 0.9;
+        }
+
+        .related-cards-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .related-cards {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            justify-content: flex-start;
+            padding: 0;
+            padding-right: 20px;
+            min-width: 0;
+        }
+
+        .related-cards::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+
+        .related-card {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: flex-start;
+            width: 391px;
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            padding: 8px;
+            border-radius: 11px;
+            background: var(--White, #fefefe);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .related-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .related-card-image {
+            width: 100%;
+            height: 292px;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            background: var(--dark_grey, #f0f0f0);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .related-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .related-card-info {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            width: 100%;
+        }
+
+        .related-card-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 4px;
+            flex-shrink: 0;
+            overflow: hidden;
+            background: var(--dark_grey, #f0f0f0);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .related-card-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .related-card-text {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 0;
+        }
+
+        .related-card-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 24px;
+            font-weight: 400;
+            line-height: 100%;
+            color: var(--black, #212121);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-width: 0;
+        }
+
+        .related-card-tags {
+            display: flex;
+            gap: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1.4;
+            color: var(--black, #212121);
+            white-space: nowrap;
+        }
+
+        .horizontal-scroll {
+            background: var(--dark_grey, #f0f0f0);
+            height: 5px;
+            border-radius: 7px;
+            width: 100%;
+            max-width: 1211px;
+            position: relative;
+            margin: 0 auto;
+        }
+
+        .horizontal-scroll::before {
+            content: '';
+            position: absolute;
+            left: var(--thumb-left, 0);
+            top: 0;
+            background: var(--black, #212121);
+            height: 5px;
+            border-radius: 7px;
+            width: var(--thumb-width, 56px);
+            transition: width 0.1s ease, left 0.1s ease;
+        }
+
+        /* Footer Buttons */
+        .footer-buttons {
+            position: fixed;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 217px;
+            height: 82px;
+            z-index: 1000;
+        }
+
+        .footer-buttons-content {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--color-f2f2f2, #f2f2f2);
+            border: 1px solid var(--color-c0c0c0, #c0c0c0);
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 22.5px 0px rgba(0, 0, 0, 0.25);
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .back-button {
+            background: var(--color-b9b9b9, #b9b9b9);
+            height: 45px;
+            padding: 0 20px;
+            border-radius: 10px;
+            border: none;
+            box-shadow: var(--drop-shadow);
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+
+        .back-button:hover {
+            opacity: 0.9;
+        }
+
+        .back-button-icon {
+            width: 24px;
+            height: 24px;
+            position: relative;
+        }
+
+        .back-button-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .back-button-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: normal;
+            color: var(--black, #212121);
+            white-space: nowrap;
+        }
+
+        .visit-button {
+            background: var(--color-171615, #171615);
+            height: 45px;
+            padding: 0 20px;
+            border-radius: 10px;
+            border: none;
+            box-shadow: var(--drop-shadow);
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+
+        .visit-button:hover {
+            opacity: 0.9;
+        }
+
+        .visit-button-icon {
+            width: 24px;
+            height: 24px;
+            overflow: hidden;
+            flex-shrink: 0;
+            color: #F6F4F0;
+        }
+
+        .visit-button-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .visit-button-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: normal;
+            color: var(--color-f6f4f0, #f6f4f0);
+            white-space: nowrap;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--color-a3a3a3, #a3a3a3);
+        }
+
+        .empty-state h2 {
+            font-size: 24px;
+            margin-bottom: 12px;
+            color: var(--black, #212121);
+            font-weight: 400;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1440px) {
+            .show-more-header {
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .show-more-section {
+                width: 100%;
+                padding: 0 20px;
+            }
+
+            .related-cards {
+                flex-wrap: wrap;
+                justify-content: flex-start;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .project-main-wrapper {
+                width: calc(100% - 40px);
+                max-width: 819px;
+                top: 80px;
+            }
+
+            .project-title {
+                font-size: 36px;
+            }
+
+            .info-section {
+                width: 100%;
+            }
+
+            .project-cards-container {
+                width: 100%;
+            }
+
+            .project-card {
+                width: 100%;
+            }
+
+            .related-card {
+                width: calc(50% - 10px);
+                max-width: 391px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-header {
+                width: calc(100% - 20px);
+            }
+
+            .header-content {
+                width: 100%;
+            }
+
+            .project-main-wrapper {
+                top: 70px;
+                width: calc(100% - 40px);
+                padding: 0 20px;
+            }
+
+            .project-header-container {
+                width: 100%;
+            }
+
+            .project-title {
+                font-size: 32px;
+                white-space: normal;
+            }
+
+            .info-section {
+                height: auto;
+                min-height: 103px;
+            }
+
+            .info-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .info-categories {
+                gap: 20px;
+                flex-wrap: wrap;
+            }
+
+            .project-cards-container {
+                width: 100%;
+            }
+
+            .project-card {
+                position: relative;
+            }
+
+            .show-more-section {
+                position: relative;
+                top: auto;
+                margin-top: 40px;
+                padding: 0 20px;
+            }
+
+            .related-card {
+                width: 100%;
+                max-width: 391px;
+            }
+
+            .footer-buttons {
+                position: fixed;
+                bottom: 5px;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .project-title {
+                font-size: 24px;
+            }
+
+            .info-section {
+                padding: 12px;
+            }
+
+            .creator-info {
+                width: 100%;
+            }
+
+            .info-categories {
+                width: 100%;
+                gap: 15px;
+            }
+
+            .info-category {
+                width: auto;
+                min-width: 87px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="header-content">
+            <div class="header-main">
+                <a href="index.html" class="logo-container">
+                    <div class="logo-icon"></div>
+                    <div class="logo-text">Inspirio</div>
+                </a>
+                <button class="header-button">Buy me a coffe</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="eternal-page">
+        <!-- Project Main Wrapper -->
+        <div class="project-main-wrapper">
+            <!-- Project Main Container -->
+            <div class="project-main-container">
+            <!-- Project Header Container -->
+            <div class="project-header-container">
+                <!-- Project Title -->
+                <h1 class="project-title" id="projectTitle">OWA Investment</h1>
+
+                <!-- Info Section -->
+                <div class="info-section">
+                    <div class="info-content">
+                        <div class="creator-info" id="creatorInfo" style="display: none;">
+                            <div class="creator-icon" id="creatorIcon">
+                                <!-- Icon will be loaded dynamically -->
+                            </div>
+                            <div class="creator-text">
+                                <p class="creator-label">Created by</p>
+                                <p class="creator-name" id="creatorName">AVA Digital</p>
+                            </div>
+                        </div>
+                        <div class="info-categories">
+                            <div class="info-category">
+                                <p class="info-category-title">Domains</p>
+                                <div class="info-category-list" id="domainsList">
+                                    <!-- Will be populated dynamically -->
+                                </div>
+                            </div>
+                            <div class="info-category">
+                                <p class="info-category-title">Fonts</p>
+                                <div class="info-category-list" id="fontsList">
+                                    <!-- Will be populated dynamically -->
+                                </div>
+                            </div>
+                            <div class="info-category">
+                                <p class="info-category-title">Framework</p>
+                                <div class="info-category-list" id="frameworkList">
+                                    <!-- Will be populated dynamically -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project Cards -->
+            <div class="project-cards-container">
+            <div class="project-card" id="projectCard1">
+                <img class="project-card-image" id="projectImage1" src="" alt="Project Image" loading="lazy">
+                <div class="project-card-overlay"></div>
+            </div>
+            <div class="project-card" id="projectCard2">
+                <img class="project-card-image" id="projectImage2" src="" alt="Project Image" loading="lazy">
+                <div class="project-card-overlay"></div>
+            </div>
+        </div>
+        </div>
+
+            <!-- Show More Header -->
+            <div class="show-more-header">
+                <div class="show-more-button-container">
+                    <div class="show-more-button">
+                        <button onclick="showMoreProjects()">Show more</button>
+                    </div>
+                </div>
+                <div class="related-cards-wrapper">
+                    <div class="related-cards" id="relatedCards">
+                        <!-- Related cards will be loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Show More Section -->
+        <div class="show-more-section">
+            <div class="horizontal-scroll"></div>
+        </div>
+
+        <!-- Footer Buttons -->
+        <div class="footer-buttons">
+            <div class="footer-buttons-content">
+                <button class="back-button" onclick="goBack()">
+                    <div class="back-button-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17 5V14L6.5 14M6.5 14L11.5 8.99999M6.5 14L11.5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <span class="back-button-text">Back</span>
+                </button>
+                <button class="visit-button" id="visitButton" onclick="visitProject()">
+                    <div class="visit-button-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <g clip-path="url(#clip0_109_205)">
+                                <path d="M12 2C10.0222 2 8.08879 2.58649 6.4443 3.6853C4.79981 4.78412 3.51809 6.3459 2.76121 8.17317C2.00433 10.0004 1.8063 12.0111 2.19215 13.9509C2.578 15.8907 3.53041 17.6725 4.92894 19.0711C6.32746 20.4696 8.10929 21.422 10.0491 21.8079C11.9889 22.1937 13.9996 21.9957 15.8268 21.2388C17.6541 20.4819 19.2159 19.2002 20.3147 17.5557C21.4135 15.9112 22 13.9778 22 12C22 10.6868 21.7413 9.38642 21.2388 8.17317C20.7363 6.95991 19.9997 5.85752 19.0711 4.92893C18.1425 4.00035 17.0401 3.26375 15.8268 2.7612C14.6136 2.25866 13.3132 2 12 2ZM12 4C12.6026 4.00394 13.2029 4.07436 13.79 4.21C13.6162 4.60239 13.3483 4.94587 13.01 5.21C12.79 5.38 12.55 5.52 12.31 5.67C11.5502 6.04408 10.9096 6.62234 10.46 7.34C9.96744 8.36657 9.75361 9.50466 9.84 10.64C9.84 12 9.84 12.8 8.89 13.51C7.52 14.58 5.43 13.98 4.13 13.44C4.04502 12.9647 4.00152 12.4829 4 12C4 9.87827 4.84286 7.84344 6.34315 6.34315C7.84344 4.84285 9.87827 4 12 4ZM16.89 18.32C16.717 17.9207 16.5061 17.5389 16.26 17.18C16.15 17.02 16.04 16.86 15.94 16.69C15.55 16.01 15.69 15.69 16.32 14.69L16.42 14.52C16.8258 13.7759 17.026 12.9371 17 12.09C16.999 11.7546 17.0291 11.4198 17.09 11.09C17.25 10.36 18.8 10.16 19.76 10.09C20.148 11.5985 20.0837 13.1878 19.5752 14.6601C19.0667 16.1324 18.1363 17.4225 16.9 18.37L16.89 18.32Z" fill="currentColor"/>
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_109_205">
+                                    <rect width="24" height="24" fill="white"/>
+                                </clipPath>
+                            </defs>
+                        </svg>
+                    </div>
+                    <span class="visit-button-text">Visit</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get project data from URL parameters by slug
+        async function getProjectData() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const projectSlug = urlParams.get('slug');
+            
+            if (!projectSlug) {
+                // Fallback: проверяем старый параметр id для обратной совместимости
+                const projectId = urlParams.get('id');
+                if (projectId) {
+                    // Редирект на slug, если есть id
+                    const supabaseClient = window.supabase || supabase;
+                    if (supabaseClient) {
+                        const { data: card } = await supabaseClient
+                            .from('cards')
+                            .select('slug')
+                            .eq('id', projectId)
+                            .single();
+                        if (card && card.slug) {
+                            window.location.href = `info.html?slug=${encodeURIComponent(card.slug)}`;
+                            return null;
+                        }
+                    }
+                }
+                return null;
+            }
+            
+            try {
+                // Получаем Supabase клиент
+                const supabaseClient = window.supabase || supabase;
+                // #region agent log
+                fetch('http://127.0.0.1:7242/ingest/1be379df-9509-46b6-9dde-ca2487cf6696',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'info.html:923',message:'Supabase client check',data:{hasWindowSupabase:!!window.supabase,hasSupabase:typeof supabase!=='undefined',hasClient:!!supabaseClient,projectSlug},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+                // #endregion
+                
+                // Fetch project data from Supabase by slug
+                const { data, error } = await supabaseClient
+                    .from('cards')
+                    .select(`
+                        *,
+                        card_categories (
+                            categories (
+                                id,
+                                name,
+                                slug
+                            )
+                        ),
+                        authors (
+                            id,
+                            name,
+                            avatar_url
+                        )
+                    `)
+                    .eq('slug', projectSlug)
+                    .single();
+
+                if (error) {
+                    // #region agent log
+                    fetch('http://127.0.0.1:7242/ingest/1be379df-9509-46b6-9dde-ca2487cf6696',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'info.html:946',message:'Supabase error',data:{error:error.message,code:error.code,projectSlug},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+                    // #endregion
+                    console.error('Error fetching project:', error);
+                    console.error('Error details:', JSON.stringify(error, null, 2));
+                    return null;
+                }
+
+                if (!data) {
+                    // #region agent log
+                    fetch('http://127.0.0.1:7242/ingest/1be379df-9509-46b6-9dde-ca2487cf6696',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'info.html:951',message:'No data returned',data:{projectSlug},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
+                    // #endregion
+                    console.warn('Project not found for slug:', projectSlug);
+                    return null;
+                }
+
+                // #region agent log
+                fetch('http://127.0.0.1:7242/ingest/1be379df-9509-46b6-9dde-ca2487cf6696',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'info.html:955',message:'Project data loaded',data:{hasData:!!data,hasCategories:!!data.card_categories,categoriesCount:data.card_categories?.length||0},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
+                // #endregion
+                console.log('Project data loaded:', data);
+                return data;
+            } catch (error) {
+                console.error('Supabase connection error:', error);
+                return null;
+            }
+        }
+
+        // Load project images
+        async function getProjectImages(cardId) {
+            try {
+                const supabaseClient = window.supabase || supabase;
+                const { data, error } = await supabaseClient
+                    .from('project_images')
+                    .select('*')
+                    .eq('card_id', cardId)
+                    .order('display_order', { ascending: true });
+
+                if (error) {
+                    console.warn('Ошибка загрузки изображений:', error);
+                    return [];
+                }
+
+                return data || [];
+            } catch (error) {
+                console.error('Supabase connection error:', error);
+                return [];
+            }
+        }
+
+        // Load related projects
+        async function getRelatedProjects(currentCardId, limit = 4) {
+            try {
+                const supabaseClient = window.supabase || supabase;
+                const { data, error } = await supabaseClient
+                    .from('cards')
+                    .select(`
+                        *,
+                        card_categories (
+                            categories (
+                                id,
+                                name,
+                                slug
+                            )
+                        )
+                    `)
+                    .neq('id', currentCardId)
+                    .order('created_at', { ascending: false })
+                    .limit(limit);
+
+                if (error) {
+                    console.warn('Ошибка загрузки связанных проектов:', error);
+                    return [];
+                }
+
+                return data || [];
+            } catch (error) {
+                console.error('Supabase connection error:', error);
+                return [];
+            }
+        }
+
+        // Generate website URL from slug
+        function generateWebsiteUrl(slug) {
+            // Генерируем URL из slug
+            return `https://${slug}.com`;
+        }
+
+        // Load fake demo data
+        function loadFakeData() {
+            const fakeCard = {
+                id: 'fake-id-123',
+                title: 'OWA Investment',
+                slug: 'owa-investment',
+                image_url: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=819&h=612&fit=crop',
+                thumbnail_url: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=391&h=292&fit=crop',
+                author_name: 'AVA Digital',
+                author_image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=34&h=34&fit=crop',
+                card_categories: [
+                    { categories: { id: '1', name: 'E-Commerce', slug: 'e-commerce' } },
+                    { categories: { id: '2', name: 'Food', slug: 'food' } }
+                ],
+                authors: {
+                    id: 'author-1',
+                    name: 'AVA Digital',
+                    avatar_url: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=34&h=34&fit=crop'
+                }
+            };
+
+            const fakeProjectImages = [
+                { image_url: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=819&h=612&fit=crop' },
+                { image_url: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=819&h=612&fit=crop' }
+            ];
+
+            const fakeRelatedProjects = [
+                {
+                    id: 'related-1',
+                    title: 'Modern E-Commerce Platform',
+                    slug: 'modern-ecommerce',
+                    thumbnail_url: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=391&h=292&fit=crop',
+                    card_categories: [
+                        { categories: { id: '1', name: 'E-Commerce', slug: 'e-commerce' } }
+                    ]
+                },
+                {
+                    id: 'related-2',
+                    title: 'Food Delivery App',
+                    slug: 'food-delivery',
+                    thumbnail_url: 'https://images.unsplash.com/photo-1556912172-45b7abe8b7e8?w=391&h=292&fit=crop',
+                    card_categories: [
+                        { categories: { id: '2', name: 'Food', slug: 'food' } }
+                    ]
+                },
+                {
+                    id: 'related-3',
+                    title: 'Creative Agency Website',
+                    slug: 'creative-agency',
+                    thumbnail_url: 'https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?w=391&h=292&fit=crop',
+                    card_categories: [
+                        { categories: { id: '3', name: 'Agency', slug: 'agency' } }
+                    ]
+                },
+                {
+                    id: 'related-4',
+                    title: 'SaaS Dashboard Design',
+                    slug: 'saas-dashboard',
+                    thumbnail_url: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=391&h=292&fit=crop',
+                    card_categories: [
+                        { categories: { id: '4', name: 'SaaS', slug: 'saas' } }
+                    ]
+                }
+            ];
+
+            // Используем фейковые данные
+            renderProjectData(fakeCard, fakeProjectImages, fakeRelatedProjects);
+        }
+
+        // Render project data (used by both real and fake data)
+        function renderProjectData(card, projectImages, relatedProjects) {
+            // Get categories
+            const categories = card.card_categories?.map(cc => cc.categories).filter(c => c) || [];
+            
+            // Update project title
+            document.getElementById('projectTitle').textContent = card.title || 'Untitled';
+            
+            // Update creator info (if available)
+            const creatorInfo = document.getElementById('creatorInfo');
+            if (card.authors && card.authors.id) {
+                creatorInfo.style.display = 'flex';
+                document.getElementById('creatorName').textContent = card.authors.name || 'Unknown';
+                const creatorIcon = document.getElementById('creatorIcon');
+                if (card.authors.avatar_url) {
+                    creatorIcon.innerHTML = `<img src="${card.authors.avatar_url}" alt="Creator">`;
+                } else {
+                    creatorIcon.innerHTML = '';
+                }
+            } else if (card.author_name) {
+                // Fallback на author_name из карточки
+                creatorInfo.style.display = 'flex';
+                document.getElementById('creatorName').textContent = card.author_name;
+                const creatorIcon = document.getElementById('creatorIcon');
+                if (card.author_image) {
+                    creatorIcon.innerHTML = `<img src="${card.author_image}" alt="Creator">`;
+                } else {
+                    creatorIcon.innerHTML = '';
+                }
+            } else {
+                creatorInfo.style.display = 'none';
+            }
+            
+            // Update domains
+            const domainsList = document.getElementById('domainsList');
+            domainsList.innerHTML = '';
+            if (categories.length > 0) {
+                // Убираем дубликаты категорий
+                const uniqueCategories = categories.filter((cat, index, self) => 
+                    index === self.findIndex(c => c.id === cat.id)
+                );
+                uniqueCategories.forEach(cat => {
+                    if (cat && cat.name) {
+                        const domainItem = document.createElement('p');
+                        domainItem.textContent = cat.name;
+                        domainsList.appendChild(domainItem);
+                    }
+                });
+            }
+            
+            // Если категорий нет, показываем пустой список
+            if (domainsList.children.length === 0) {
+                const emptyItem = document.createElement('p');
+                emptyItem.textContent = '—';
+                emptyItem.style.color = 'var(--color-a3a3a3, #a3a3a3)';
+                domainsList.appendChild(emptyItem);
+            }
+            
+            // Update fonts (default values)
+            const fontsList = document.getElementById('fontsList');
+            fontsList.innerHTML = '';
+            const fonts = ['Inter', 'Montserrat'];
+            fonts.forEach(font => {
+                const fontItem = document.createElement('p');
+                fontItem.textContent = font;
+                fontsList.appendChild(fontItem);
+            });
+            
+            // Update framework (default value)
+            const frameworkList = document.getElementById('frameworkList');
+            frameworkList.innerHTML = '';
+            const framework = 'Webflow';
+            const frameworkItem = document.createElement('p');
+            frameworkItem.textContent = framework;
+            frameworkList.appendChild(frameworkItem);
+            
+            // Update project images
+            const projectImage1 = document.getElementById('projectImage1');
+            const projectImage2 = document.getElementById('projectImage2');
+            
+            if (projectImages && projectImages.length > 0) {
+                // Use first image for first card
+                if (projectImages[0] && projectImages[0].image_url) {
+                    projectImage1.src = projectImages[0].image_url;
+                    projectImage1.style.display = 'block';
+                }
+                // Use second image for second card, or repeat first if only one
+                if (projectImages[1] && projectImages[1].image_url) {
+                    projectImage2.src = projectImages[1].image_url;
+                    projectImage2.style.display = 'block';
+                } else if (projectImages[0] && projectImages[0].image_url) {
+                    projectImage2.src = projectImages[0].image_url;
+                    projectImage2.style.display = 'block';
+                }
+            } else if (card.image_url) {
+                // Fallback на старое изображение для обратной совместимости
+                projectImage1.src = card.image_url;
+                projectImage1.style.display = 'block';
+                projectImage2.src = card.image_url;
+                projectImage2.style.display = 'block';
+            } else if (card.thumbnail_url) {
+                // Используем thumbnail как fallback
+                projectImage1.src = card.thumbnail_url;
+                projectImage1.style.display = 'block';
+                projectImage2.src = card.thumbnail_url;
+                projectImage2.style.display = 'block';
+            } else {
+                // Если изображений нет, скрываем карточки
+                projectImage1.style.display = 'none';
+                projectImage2.style.display = 'none';
+            }
+            
+            // Update visit button - generate URL from slug
+            const websiteUrl = generateWebsiteUrl(card.slug);
+            document.getElementById('visitButton').setAttribute('data-url', websiteUrl);
+            
+            // Load related projects
+            const relatedCardsContainer = document.getElementById('relatedCards');
+            // #region agent log
+            fetch('http://127.0.0.1:7242/ingest/1be379df-9509-46b6-9dde-ca2487cf6696',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'info.html:1211',message:'Loading related cards',data:{containerFound:!!relatedCardsContainer,relatedProjectsCount:relatedProjects?.length||0},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
+            // #endregion
+            relatedCardsContainer.innerHTML = '';
+            
+            if (relatedProjects && relatedProjects.length > 0) {
+                relatedProjects.forEach(relatedCard => {
+                    const relatedCategories = relatedCard.card_categories?.map(cc => cc.categories).filter(c => c) || [];
+                    
+                    const relatedCardSlug = relatedCard.slug || generateSlugFromTitle(relatedCard.title);
+                    const imageUrl = relatedCard.thumbnail_url || relatedCard.image_url || '';
+                    
+                    const cardElement = document.createElement('div');
+                    cardElement.className = 'related-card';
+                    cardElement.onclick = () => viewProject(relatedCardSlug);
+                    
+                    // Убираем дубликаты категорий для связанных карточек
+                    const uniqueRelatedCategories = relatedCategories.filter((cat, index, self) => 
+                        index === self.findIndex(c => c.id === cat.id)
+                    );
+                    const relatedCategoriesHtml = uniqueRelatedCategories.length > 0 
+                        ? uniqueRelatedCategories.map(cat => `<span>${cat.name}</span>`).join('')
+                        : '';
+                    
+                    cardElement.innerHTML = `
+                        <div class="related-card-image">
+                            ${imageUrl ? `<img src="${imageUrl}" alt="${relatedCard.title || 'Project'}" loading="lazy">` : '<div style="width: 100%; height: 100%; background: var(--dark_grey, #f0f0f0);"></div>'}
+                        </div>
+                        <div class="related-card-info">
+                            <div class="related-card-icon"></div>
+                            <div class="related-card-text">
+                                <h3 class="related-card-title">${relatedCard.title || 'Untitled'}</h3>
+                                ${relatedCategoriesHtml ? `<div class="related-card-tags">${relatedCategoriesHtml}</div>` : ''}
+                            </div>
+                        </div>
+                    `;
+                    
+                    relatedCardsContainer.appendChild(cardElement);
+                });
+            }
+            
+            // Update scrollbar after cards are loaded
+            // #region agent log
+            fetch('http://127.0.0.1:7242/ingest/1be379df-9509-46b6-9dde-ca2487cf6696',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'info.html:1251',message:'Scheduling scrollbar update',data:{cardsLoaded:relatedProjects?.length||0},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+            // #endregion
+            setTimeout(updateScrollbar, 100);
+            
+            // Update page title
+            document.title = `${card.title} - I.N.S.P.I.R.I.O`;
+        }
+
+        // Load project data
+        async function loadProjectData() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const projectSlug = urlParams.get('slug');
+            const useFakeData = urlParams.get('fake') === 'true' || !projectSlug;
+            
+            // Если запрошены фейковые данные или нет slug, показываем фейковые данные
+            if (useFakeData) {
+                console.log('Loading fake demo data...');
+                loadFakeData();
+                return;
+            }
+            
+            // Fallback для старого параметра id
+            const projectId = urlParams.get('id');
+            if (!projectId) {
+                // Если нет ни slug, ни id, показываем фейковые данные
+                loadFakeData();
+                return;
+            }
+            
+            const card = await getProjectData();
+            
+            if (!card) {
+                console.error('Project not found. Slug:', projectSlug);
+                // Если проект не найден, показываем фейковые данные для демонстрации
+                console.log('Project not found, showing fake data instead...');
+                loadFakeData();
+                return;
+            }
+            
+            console.log('Loading project data for:', card.title);
+            
+            // Загружаем изображения проекта по card_id
+            const projectImages = await getProjectImages(card.id);
+            
+            // Load related projects
+            const relatedProjects = await getRelatedProjects(card.id);
+            
+            // Используем общую функцию для отображения данных
+            renderProjectData(card, projectImages, relatedProjects);
+        }
+
+        // Visit project website
+        function visitProject() {
+            const button = document.getElementById('visitButton');
+            const url = button.getAttribute('data-url');
+            if (url) {
+                window.open(url, '_blank');
+            }
+        }
+
+        // Go back to main page
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+
+        // Show more projects
+        function showMoreProjects() {
+            window.location.href = 'index.html';
+        }
+
+        // View project
+        function viewProject(cardSlug) {
+            window.location.href = `info.html?slug=${encodeURIComponent(cardSlug)}`;
+        }
+
+        // Generate slug from title
+        function generateSlugFromTitle(title) {
+            return title
+                .toLowerCase()
+                .replace(/[^a-z0-9\s-]/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-')
+                .trim();
+        }
+
+        // Update custom scrollbar position
+        function updateScrollbar() {
+            // #region agent log
+            fetch('http://127.0.0.1:7242/ingest/1be379df-9509-46b6-9dde-ca2487cf6696',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'info.html:1335',message:'updateScrollbar called',data:{timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+            // #endregion
+            const relatedCardsWrapper = document.querySelector('.related-cards-wrapper');
+            const horizontalScroll = document.querySelector('.horizontal-scroll');
+            
+            // #region agent log
+            fetch('http://127.0.0.1:7242/ingest/1be379df-9509-46b6-9dde-ca2487cf6696',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'info.html:1339',message:'Elements found',data:{wrapperFound:!!relatedCardsWrapper,scrollFound:!!horizontalScroll},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+            // #endregion
+            
+            if (!relatedCardsWrapper || !horizontalScroll) return;
+
+            const scrollLeft = relatedCardsWrapper.scrollLeft;
+            const scrollWidth = relatedCardsWrapper.scrollWidth;
+            const clientWidth = relatedCardsWrapper.clientWidth;
+            const scrollbarWidth = horizontalScroll.offsetWidth;
+            
+            // #region agent log
+            fetch('http://127.0.0.1:7242/ingest/1be379df-9509-46b6-9dde-ca2487cf6696',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'info.html:1346',message:'Scroll values before calc',data:{scrollLeft,scrollWidth,clientWidth,scrollbarWidth},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+            // #endregion
+            
+            // Calculate scrollbar thumb width and position
+            const scrollableWidth = scrollWidth - clientWidth;
+            if (scrollableWidth <= 0) {
+                // #region agent log
+                fetch('http://127.0.0.1:7242/ingest/1be379df-9509-46b6-9dde-ca2487cf6696',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'info.html:1348',message:'No scroll needed',data:{scrollableWidth},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+                // #endregion
+                horizontalScroll.style.display = 'none';
+                return;
+            }
+            
+            horizontalScroll.style.display = 'block';
+            const thumbWidth = Math.max(56, (clientWidth / scrollWidth) * scrollbarWidth);
+            const maxLeft = scrollbarWidth - thumbWidth;
+            const thumbLeft = (scrollLeft / scrollableWidth) * maxLeft;
+            
+            // #region agent log
+            fetch('http://127.0.0.1:7242/ingest/1be379df-9509-46b6-9dde-ca2487cf6696',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'info.html:1356',message:'Scrollbar updated',data:{thumbWidth,maxLeft,thumbLeft},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+            // #endregion
+            
+            horizontalScroll.style.setProperty('--thumb-width', thumbWidth + 'px');
+            horizontalScroll.style.setProperty('--thumb-left', thumbLeft + 'px');
+        }
+
+        // Initialize scrollbar on page load and when cards are loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // #region agent log
+            fetch('http://127.0.0.1:7242/ingest/1be379df-9509-46b6-9dde-ca2487cf6696',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'info.html:1363',message:'DOMContentLoaded scrollbar init',data:{timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+            // #endregion
+            const relatedCardsWrapper = document.querySelector('.related-cards-wrapper');
+            // #region agent log
+            fetch('http://127.0.0.1:7242/ingest/1be379df-9509-46b6-9dde-ca2487cf6696',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'info.html:1365',message:'Wrapper element check',data:{found:!!relatedCardsWrapper},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+            // #endregion
+            if (relatedCardsWrapper) {
+                relatedCardsWrapper.addEventListener('scroll', updateScrollbar);
+                // Update on resize
+                window.addEventListener('resize', updateScrollbar);
+                // Initial update
+                setTimeout(updateScrollbar, 100);
+            }
+        });
+
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', loadProjectData);
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,279 @@
+/**
+ * ============================================
+ * АРХИВ: ЛОГИКА АВТОРОВ
+ * ============================================
+ * Этот файл содержит всю логику работы с авторами,
+ * которая была временно отключена в проекте.
+ * 
+ * Для восстановления функциональности:
+ * 1. Раскомментируйте соответствующие блоки в файлах
+ * 2. Восстановите файл Page/author.html из Page/author.html.ARCHIVED
+ * 3. Восстановите файл Page/admin-author.html из Page/admin-author.html.ARCHIVED
+ * ============================================
+ */
+
+// ============================================
+// 1. ЛОГИКА ИЗ Page/author.html
+// ============================================
+/*
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Автор - I.N.S.P.I.R.I.O</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="../supabase-config.js"></script>
+</head>
+<body>
+    <div class="author-page">
+        <div class="author-header">
+            <button class="back-button" onclick="goBack()">← Назад</button>
+            <div class="author-info" id="authorInfo">
+                <div class="loading">Загрузка информации об авторе...</div>
+            </div>
+        </div>
+        
+        <div class="projects-grid" id="authorProjects">
+            <div class="loading">Загрузка проектов...</div>
+        </div>
+    </div>
+
+    <script>
+        async function loadAuthorPage() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const authorSlug = urlParams.get('slug');
+            
+            if (!authorSlug) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            try {
+                // Загружаем данные автора
+                const { data: author, error: authorError } = await supabase
+                    .from('authors')
+                    .select('*')
+                    .eq('slug', authorSlug)
+                    .single();
+                
+                if (authorError || !author) {
+                    alert('Автор не найден');
+                    window.location.href = 'index.html';
+                    return;
+                }
+                
+                // Отображаем информацию об авторе
+                const authorInfo = document.getElementById('authorInfo');
+                authorInfo.innerHTML = `
+                    ${author.avatar_url ? 
+                        `<img src="${author.avatar_url}" alt="${author.name}" class="author-avatar-large">` : 
+                        `<div class="author-avatar-large" style="background-color: #e0e0e0; display: flex; align-items: center; justify-content: center; font-size: 48px; font-weight: 700; color: #666;">
+                            ${author.name.charAt(0).toUpperCase()}
+                        </div>`
+                    }
+                    <div>
+                        <h1>${author.name}</h1>
+                        ${author.bio ? `<p>${author.bio}</p>` : ''}
+                        ${author.website ? `<a href="${author.website}" target="_blank">Сайт автора →</a>` : ''}
+                    </div>
+                `;
+                
+                // Загружаем проекты автора
+                const { data: cards, error: cardsError } = await supabase
+                    .from('cards')
+                    .select(`
+                        *,
+                        card_categories (
+                            categories (
+                                id,
+                                name,
+                                slug
+                            )
+                        )
+                    `)
+                    .eq('author_id', author.id)
+                    .order('created_at', { ascending: false });
+                
+                if (cardsError) {
+                    console.error('Ошибка загрузки проектов:', cardsError);
+                    document.getElementById('authorProjects').innerHTML = 
+                        '<div class="empty-state"><h2>Ошибка загрузки проектов</h2></div>';
+                    return;
+                }
+                
+                if (!cards || cards.length === 0) {
+                    document.getElementById('authorProjects').innerHTML = 
+                        '<div class="empty-state"><h2>У автора пока нет проектов</h2></div>';
+                    return;
+                }
+                
+                renderAuthorCards(cards);
+                
+            } catch (error) {
+                console.error('Ошибка:', error);
+                alert('Произошла ошибка при загрузке страницы');
+                window.location.href = 'index.html';
+            }
+        }
+        
+        function renderAuthorCards(cards) {
+            const grid = document.getElementById('authorProjects');
+            grid.innerHTML = '';
+            
+            cards.forEach(card => {
+                const cardElement = document.createElement('article');
+                cardElement.className = 'project-card';
+                cardElement.onclick = () => viewProject(card.id);
+                
+                const categories = card.card_categories?.map(cc => cc.categories).filter(c => c) || [];
+                
+                const categoriesHtml = categories.length > 0 ? `
+                    <div class="project-tags">
+                        ${categories.map(cat => `<span class="tag">${cat.name}</span>`).join('')}
+                    </div>
+                ` : '';
+                
+                const imageUrl = card.thumbnail_url || card.image_url;
+                
+                cardElement.innerHTML = `
+                    <div class="project-image">
+                        <img src="${imageUrl}" alt="${card.title}" loading="lazy">
+                    </div>
+                    <div class="project-overlay">
+                        <h3 class="project-title">${card.title}</h3>
+                        ${card.description ? `<p class="project-subtitle">${card.description}</p>` : ''}
+                        ${categoriesHtml}
+                    </div>
+                `;
+                
+                grid.appendChild(cardElement);
+            });
+        }
+        
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+        
+        function viewProject(cardId) {
+            window.location.href = `project.html?id=${cardId}`;
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof supabase === 'undefined') {
+                alert('Ошибка: Supabase не подключен! Проверьте supabase-config.js');
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            loadAuthorPage();
+        });
+    </script>
+</body>
+</html>
+*/
+
+// ============================================
+// 2. ЛОГИКА ИЗ Page/index.html
+// ============================================
+
+// В запросе к Supabase добавить:
+/*
+.select(`
+    *,
+    authors (
+        id,
+        name,
+        slug,
+        avatar_url
+    ),
+    card_categories (
+        categories (
+            id,
+            name,
+            slug
+        )
+    )
+`)
+*/
+
+// В функции renderCardsSection добавить:
+/*
+// Аватар автора
+const authorAvatar = card.authors?.avatar_url || '';
+
+// В HTML карточки:
+<div class="card-icon">
+    ${authorAvatar ? `<img src="${authorAvatar}" alt="Author">` : ''}
+</div>
+*/
+
+// ============================================
+// 3. ЛОГИКА ИЗ Page/project.html
+// ============================================
+
+// В запросе к Supabase добавить:
+/*
+.select(`
+    *,
+    authors (
+        id,
+        name,
+        slug,
+        avatar_url
+    ),
+    card_categories (
+        categories (
+            id,
+            name,
+            slug
+        )
+    )
+`)
+*/
+
+// В функции loadProjectData добавить:
+/*
+// Get author name
+const author = card.authors;
+const authorName = author ? `by ${author.name}` : 'Unknown Author';
+
+// Update sidebar
+document.getElementById('projectAuthor').textContent = authorName;
+*/
+
+// ============================================
+// 4. ЛОГИКА ИЗ Page/admin.html
+// ============================================
+
+// См. комментарии в Page/admin.html с меткой "АРХИВ:"
+
+// ============================================
+// 5. SQL СХЕМА (из sql/supabase-setup.sql)
+// ============================================
+/*
+CREATE TABLE IF NOT EXISTS authors (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  name TEXT NOT NULL,
+  slug TEXT NOT NULL UNIQUE,
+  avatar_url TEXT,
+  bio TEXT,
+  website TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_authors_slug ON authors(slug);
+
+-- В таблице cards есть колонка:
+author_id UUID REFERENCES authors(id) ON DELETE SET NULL,
+*/
+
+// ============================================
+// КОНЕЦ АРХИВА
+// ============================================
+

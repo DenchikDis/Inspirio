@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <title>I.N.S.P.I.R.I.O - Главная</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Roboto+Flex:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../design-tokens.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #fff;
+            color: #212121;
+            min-height: 100vh;
+        }
+
+        /* ── Header ── */
+        .main-header {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 410px;
+            height: 71px;
+            z-index: 100;
+        }
+        .header-content {
+            position: absolute;
+            top: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #fefefe;
+            padding: 6px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 39.5px rgba(0,0,0,0.25);
+            width: 398px;
+        }
+        .header-main {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 5.735px;
+            text-decoration: none;
+            color: inherit;
+        }
+        .logo-icon {
+            width: 25.807px;
+            height: 25.807px;
+            background: #151515;
+            border-radius: 1.898px;
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .logo-icon::before {
+            content: '';
+            position: absolute;
+            left: 7.82px; top: 4.93px;
+            width: 10.095px; height: 15.104px;
+            background: white;
+            border-radius: 2.805px;
+        }
+        .logo-text {
+            font-family: 'Roboto Flex', sans-serif;
+            font-size: 30.324px;
+            font-weight: 400;
+            color: #151515;
+            letter-spacing: -1.2129px;
+        }
+        .header-button {
+            background: #171615;
+            color: #f6f4f0;
+            padding: 14px 20px;
+            border-radius: 10px;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0px 4px 39.5px rgba(0,0,0,0.25);
+        }
+
+        /* ── Main ── */
+        .main-content {
+            padding-top: 164px;
+            padding-bottom: 90px;
+        }
+
+        /* ── Hero ── */
+        .hero-section {
+            position: relative;
+            display: flex;
+            gap: 15px;
+            margin: 0 27px;
+            height: 509px;
+        }
+        .hero-big-card {
+            flex: 0 0 66.8%;
+            border-radius: 9.34px;
+            overflow: hidden;
+            cursor: pointer;
+            background: #d9d9d9;
+            position: relative;
+        }
+        .hero-big-card img,
+        .hero-small-card img,
+        .hero-big-card video,
+        .hero-small-card video {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .hero-small-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 23px;
+        }
+        .hero-small-card {
+            flex: 1;
+            border-radius: 9.34px;
+            overflow: hidden;
+            cursor: pointer;
+            background: #d9d9d9;
+        }
+        .hero-chips {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+            pointer-events: none;
+        }
+        .chip-dark {
+            background: #212121;
+            color: #fefefe;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* ── Categories strip ── */
+        .categories-strip {
+            margin-top: 19px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .categories-strip::-webkit-scrollbar { display: none; }
+        .categories-inner {
+            display: inline-flex;
+            gap: 8px;
+            padding: 60px 20px 20px 20px;
+            white-space: nowrap;
+        }
+        .category-chip {
+            background: #f3f3f3;
+            color: #3a3a3a;
+            padding: 4px 6px;
+            border-radius: 18px;
+            font-size: 12px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            border: none;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.2s, color 0.2s;
+        }
+        .category-chip:hover,
+        .category-chip.active {
+            background: #212121;
+            color: #fff;
+        }
+
+        /* ── All Sites label ── */
+        .all-sites-label {
+            margin: 19px auto 17px auto;
+            padding: 0 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #212121;
+            max-width: 1400px;
+        }
+
+        /* ── Cards grid ── */
+        .cards-grid-section {
+            padding: 0 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .cards-row {
+            display: flex;
+            gap: 22px;
+            margin-bottom: 22px;
+        }
+
+        /* ── Site card ── */
+        .site-card {
+            position: relative;
+            width: 332px;
+            min-width: 332px;
+            height: 248px;
+            border-radius: 9.345px;
+            overflow: hidden;
+            cursor: pointer;
+            background: #d9d9d9;
+            flex-shrink: 0;
+        }
+        .site-card img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .site-card-placeholder {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #d9d9d9;
+        }
+        .site-card-placeholder img {
+            width: 53px;
+            height: 53px;
+            display: block;
+        }
+        .site-card-physics {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+        }
+        .site-card-physics canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        .site-card-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(33,33,33,0.4);
+            opacity: 0;
+            transition: opacity 0.25s;
+            border-radius: 9.345px;
+            z-index: 3;
+            pointer-events: none;
+        }
+        .site-card:hover .site-card-overlay { opacity: 1; }
+
+        .site-card-title {
+            position: absolute;
+            left: 6px;
+            bottom: 6px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
+            opacity: 0;
+            transition: opacity 0.25s;
+            z-index: 4;
+        }
+        .site-card:hover .site-card-title { opacity: 1; }
+
+        .site-card-tags {
+            position: absolute;
+            right: 6px;
+            bottom: 6px;
+            display: flex;
+            gap: 4px;
+            z-index: 4;
+        }
+        .site-card-tag {
+            background: #f3f3f3;
+            color: #212121;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 2px 10px;
+            border-radius: 6px;
+            white-space: nowrap;
+        }
+        .site-card-tag-more {
+            background: #f3f3f3;
+            color: #212121;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 2px 5px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+            position: relative;
+            z-index: 10;
+        }
+        .site-card-tag-more.expanded {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .site-card-tags-list {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            padding: 6px;
+            background: #f3f3f3;
+            border-radius: 6px;
+            opacity: 0;
+            transform: scale(0.8);
+            transform-origin: bottom right;
+            pointer-events: none;
+            transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .site-card-tags-list.visible {
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1);
+        }
+
+        /* ── Bottom nav ── */
+        .bottom-nav {
+            position: fixed;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+        }
+        .bottom-nav-content {
+            background: white;
+            padding: 4px 4px 4px 15px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 22.5px rgba(0,0,0,0.25);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .bottom-nav-results {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #212121;
+        }
+        .results-chip {
+            background: #212121;
+            color: #fefefe;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: 6px;
+            min-width: 47px;
+            text-align: center;
+        }
+        .bottom-nav-btn {
+            width: 40px;
+            height: 40px;
+            background: #f0f0f0;
+            border: 1px solid #f0f0f0;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .bottom-nav-btn svg { width: 24px; height: 24px; }
+
+        .card-video {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .loading {
+            color: #a3a3a3;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        /* ── Skeleton loader ── */
+        .skeleton {
+            position: relative;
+            overflow: hidden;
+            background: #ececec;
+            border-radius: 10px;
+        }
+        .skeleton::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            transform: translateX(-100%);
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent);
+            animation: skeleton-shimmer 1.25s ease-in-out infinite;
+        }
+        @keyframes skeleton-shimmer {
+            100% { transform: translateX(100%); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .skeleton::after { animation: none; }
+        }
+
+        .hero-skeleton {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+            height: 100%;
+        }
+        .hero-skeleton-big {
+            flex: 0 0 66.8%;
+            border-radius: 9.34px;
+        }
+        .hero-skeleton-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 23px;
+        }
+        .hero-skeleton-small {
+            flex: 1;
+            border-radius: 9.34px;
+        }
+
+        .categories-skeleton {
+            display: inline-flex;
+            gap: 8px;
+            padding: 60px 20px 20px 20px;
+            white-space: nowrap;
+        }
+        .chip-skeleton {
+            width: 82px;
+            height: 24px;
+            border-radius: 18px;
+        }
+        .chip-skeleton.wide { width: 118px; }
+
+        .grid-skeleton {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 332px));
+            gap: 22px;
+            justify-content: start;
+        }
+        .card-skeleton {
+            width: 332px;
+            height: 248px;
+            border-radius: 9.345px;
+        }
+    </style>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="../supabase-config.js"></script>
+    <script src="../lib/media-url.js"></script>
+</head>
+<body>
+
+<!-- Header -->
+<header class="main-header">
+    <div class="header-content">
+        <div class="header-main">
+            <a href="index.html" class="logo-container">
+                <div class="logo-icon"></div>
+                <span class="logo-text">Inspirio</span>
+            </a>
+            <button class="header-button">Buy me a coffe</button>
+        </div>
+    </div>
+</header>
+
+<!-- Main -->
+<main class="main-content">
+
+    <!-- Hero -->
+    <section class="hero-section" id="heroSection">
+        <div class="hero-skeleton" aria-hidden="true">
+            <div class="skeleton hero-skeleton-big"></div>
+            <div class="hero-skeleton-col">
+                <div class="skeleton hero-skeleton-small"></div>
+                <div class="skeleton hero-skeleton-small"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories -->
+    <div class="categories-strip">
+        <div class="categories-inner" id="categoriesInner">
+            <div class="categories-skeleton" aria-hidden="true">
+                <div class="skeleton chip-skeleton"></div>
+                <div class="skeleton chip-skeleton wide"></div>
+                <div class="skeleton chip-skeleton"></div>
+                <div class="skeleton chip-skeleton wide"></div>
+                <div class="skeleton chip-skeleton"></div>
+                <div class="skeleton chip-skeleton wide"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- All Sites -->
+    <p class="all-sites-label">All Sites</p>
+
+    <!-- Cards grid -->
+    <div class="cards-grid-section" id="cardsGrid">
+        <div class="grid-skeleton" aria-hidden="true">
+            <div class="skeleton card-skeleton"></div>
+            <div class="skeleton card-skeleton"></div>
+            <div class="skeleton card-skeleton"></div>
+            <div class="skeleton card-skeleton"></div>
+            <div class="skeleton card-skeleton"></div>
+            <div class="skeleton card-skeleton"></div>
+            <div class="skeleton card-skeleton"></div>
+            <div class="skeleton card-skeleton"></div>
+        </div>
+    </div>
+
+</main>
+
+<!-- Bottom Nav -->
+<nav class="bottom-nav">
+    <div class="bottom-nav-content">
+        <div class="bottom-nav-results">
+            <span>Results</span>
+            <div class="results-chip" id="resultsCount">0</div>
+        </div>
+        <button class="bottom-nav-btn" title="Фильтр">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 7H21M7 12H17M11 17H13" stroke="#212121" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+        </button>
+        <button class="bottom-nav-btn" title="Поиск">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="11" cy="11" r="7" stroke="#212121" stroke-width="2"/>
+                <path d="M20 20L16.65 16.65" stroke="#212121" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+        </button>
+    </div>
+</nav>
+
+<script>
+    let allSites = [];
+    let activeDomainId = null;
+
+    async function loadData() {
+        const client = window.supabase || supabase;
+        if (!client) {
+            document.getElementById('heroSection').innerHTML = '<div class="loading">Не удалось загрузить данные (Supabase не подключился).</div>';
+            document.getElementById('categoriesInner').innerHTML = '';
+            document.getElementById('cardsGrid').innerHTML = '<div class="loading">Проверь подключение к интернету (CDN) и `supabase-config.js`.</div>';
+            document.getElementById('resultsCount').textContent = '0';
+            return;
+        }
+
+        const [sitesRes, domainsRes] = await Promise.all([
+            client.from('sites')
+                .select('*, site_domains(domains(id,name))')
+                .eq('is_visible', true)
+                .order('created_at', { ascending: false }),
+            client.from('domains').select('id,name').order('name')
+        ]);
+
+        if (sitesRes.error || domainsRes.error) {
+            console.error('Supabase load error:', sitesRes.error || domainsRes.error);
+            document.getElementById('heroSection').innerHTML = '<div class="loading">Ошибка загрузки данных.</div>';
+            document.getElementById('categoriesInner').innerHTML = '';
+            document.getElementById('cardsGrid').innerHTML = '<div class="loading">Попробуй обновить страницу (Ctrl+F5).</div>';
+            document.getElementById('resultsCount').textContent = '0';
+            return;
+        }
+
+        allSites = sortSitesByMediaPresence(sitesRes.data || []);
+        const domains = domainsRes.data || [];
+
+        const picked = pickHeroAndGrid(allSites);
+        renderHero(picked);
+        renderCategories(domains);
+        renderGrid(picked.gridSites);
+        document.getElementById('resultsCount').textContent = allSites.length;
+    }
+
+    function sortSitesByMediaPresence(sites) {
+        const list = Array.isArray(sites) ? sites : [];
+        const hasMedia = (s) => {
+            const shots = Array.isArray(s?.screenshots) ? s.screenshots : [];
+            const vids = Array.isArray(s?.videos) ? s.videos : [];
+            const hasShot = shots.some(x => typeof x === 'string' && x.trim());
+            const hasVid = vids.some(x => typeof x === 'string' && x.trim());
+            return hasShot || hasVid;
+        };
+
+        // Stable: keep original order (created_at desc) within each group
+        return list
+            .map((s, i) => ({ s, i, m: hasMedia(s) ? 1 : 0 }))
+            .sort((a, b) => (b.m - a.m) || (a.i - b.i))
+            .map(x => x.s);
+    }
+
+    function pickHeroAndGrid(sites) {
+        const list = Array.isArray(sites) ? sites.slice() : [];
+        if (!list.length) {
+            return { heroBig: null, heroSmall1: null, heroSmall2: null, gridSites: [] };
+        }
+
+        const byPos = (pos) => list.filter(s => (s?.hero_position || 'site-card') === pos);
+        const bigCandidates = byPos('hero-big-card');
+        const smallCandidates = byPos('hero-small-card');
+
+        // IMPORTANT: Hero must contain ONLY manually positioned projects.
+        // No automatic fallbacks.
+        const heroBig = bigCandidates[0] || null;
+        const heroSmall1 = smallCandidates[0] || null;
+        const heroSmall2 = smallCandidates[1] || null;
+
+        const usedIds = new Set([heroBig?.id, heroSmall1?.id, heroSmall2?.id].filter(Boolean));
+        const gridSites = list.filter(s => !usedIds.has(s?.id));
+
+        return { heroBig, heroSmall1, heroSmall2, gridSites };
+    }
+
+    function renderHero(picked) {
+        const hero = document.getElementById('heroSection');
+        const big = picked?.heroBig;
+        const sm1 = picked?.heroSmall1;
+        const sm2 = picked?.heroSmall2;
+
+        if (!big && !sm1 && !sm2) {
+            hero.innerHTML = '<div class="loading">Нет сайтов</div>';
+            return;
+        }
+        const bigImg = firstMediaUrl(big?.screenshots);
+        const sm1Img = firstMediaUrl(sm1?.screenshots);
+        const sm2Img = firstMediaUrl(sm2?.screenshots);
+
+        const bigVideo = firstMediaUrl(big?.videos);
+        const sm1Video = firstMediaUrl(sm1?.videos);
+        const sm2Video = firstMediaUrl(sm2?.videos);
+
+        const bigMedia = bigVideo
+            ? `<video class="card-video" src="${bigVideo}" poster="${bigImg}" muted loop playsinline preload="metadata"></video>`
+            : (bigImg ? `<img src="${bigImg}" alt="${escHtml(big.title)}" loading="lazy">` : '');
+        const sm1Media = sm1Video
+            ? `<video class="card-video" src="${sm1Video}" poster="${sm1Img}" muted loop playsinline preload="metadata"></video>`
+            : (sm1Img ? `<img src="${sm1Img}" alt="${escHtml(sm1.title)}" loading="lazy">` : '');
+        const sm2Media = sm2Video
+            ? `<video class="card-video" src="${sm2Video}" poster="${sm2Img}" muted loop playsinline preload="metadata"></video>`
+            : (sm2Img ? `<img src="${sm2Img}" alt="${escHtml(sm2.title)}" loading="lazy">` : '');
+
+        hero.innerHTML = `
+            <div class="hero-chips">
+                <span class="chip-dark">New</span>
+            </div>
+            <div class="hero-big-card" onclick="viewProject('${big?.slug || ''}')">
+                ${bigMedia}
+            </div>
+            <div class="hero-small-col">
+                <div class="hero-small-card" onclick="viewProject('${sm1?.slug || ''}')">
+                    ${sm1Media}
+                </div>
+                <div class="hero-small-card" onclick="viewProject('${sm2?.slug || ''}')">
+                    ${sm2Media}
+                </div>
+            </div>
+        `;
+    }
+
+    function renderCategories(domains) {
+        const inner = document.getElementById('categoriesInner');
+        if (!domains.length) { inner.innerHTML = ''; return; }
+        inner.innerHTML = domains.map(d =>
+            `<button class="category-chip" data-id="${d.id}" onclick="filterByDomain('${d.id}', this)">${escHtml(d.name)}</button>`
+        ).join('');
+    }
+
+    function filterByDomain(id, btn) {
+        if (activeDomainId === id) {
+            activeDomainId = null;
+            document.querySelectorAll('.category-chip').forEach(b => b.classList.remove('active'));
+        } else {
+            activeDomainId = id;
+            document.querySelectorAll('.category-chip').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+        const filtered = activeDomainId
+            ? allSites.filter(s => s.site_domains?.some(sd => sd.domains?.id === activeDomainId))
+            : allSites;
+        const ordered = sortSitesByMediaPresence(filtered);
+        const picked = pickHeroAndGrid(ordered);
+        renderHero(picked);
+        renderGrid(picked.gridSites);
+        document.getElementById('resultsCount').textContent = filtered.length;
+    }
+
+    function renderGrid(sites) {
+        const grid = document.getElementById('cardsGrid');
+        if (!sites.length) {
+            grid.innerHTML = '<div class="loading">Нет проектов</div>';
+            return;
+        }
+        const rows = [];
+        for (let i = 0; i < sites.length; i += 4) rows.push(sites.slice(i, i + 4));
+        grid.innerHTML = rows.map(row =>
+            `<div class="cards-row">${row.map(s => cardHTML(s)).join('')}</div>`
+        ).join('');
+        initVideoCards();
+        initTagHover();
+        PlaceholderPhysics.reset();
+    }
+
+    function initVideoCards() {
+        document.querySelectorAll('.site-card, .hero-big-card, .hero-small-card').forEach(card => {
+            const video = card.querySelector('.card-video');
+            if (!video) return;
+            card.addEventListener('mouseenter', () => video.play());
+            card.addEventListener('mouseleave', () => {
+                video.pause();
+                video.currentTime = 0;
+            });
+        });
+    }
+
+    function initTagHover() {
+        document.querySelectorAll('.site-card-tag-more').forEach(btn => {
+            const tagsContainer = btn.parentElement;
+            const tagsList = tagsContainer.querySelector('.site-card-tags-list');
+            if (!tagsList) return;
+
+            btn.addEventListener('mouseenter', () => {
+                btn.classList.add('expanded');
+                tagsList.classList.add('visible');
+            });
+
+            tagsContainer.addEventListener('mouseleave', () => {
+                btn.classList.remove('expanded');
+                tagsList.classList.remove('visible');
+            });
+        });
+    }
+
+    // ============================================
+    // Placeholder Physics (CSP-friendly) — only cards without images
+    // ============================================
+    const PlaceholderPhysics = (() => {
+        const COLORS = [
+            '#111111', // center
+            '#B300A8', // purple
+            '#C3003B', // magenta/red
+            '#A07A00', // gold
+            '#2E6B00', // green
+            '#0039D9', // blue
+            '#111111', // black
+            '#C40000'  // red
+        ];
+
+        let active = null;
+
+        function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
+        function rand(min, max) { return min + Math.random() * (max - min); }
+
+        function teardown(reason = '') {
+            if (!active) return;
+            try {
+                const { raf, overlay, placeholderImg, resizeObserver } = active;
+                if (raf) cancelAnimationFrame(raf);
+                if (resizeObserver) resizeObserver.disconnect();
+                if (placeholderImg) placeholderImg.style.visibility = '';
+                if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
+            } catch (e) {
+                console.warn('PlaceholderPhysics teardown failed', reason, e);
+            } finally {
+                active = null;
+            }
+        }
+
+        function drawIcon(ctx, x, y, r, angle, color) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(angle || 0);
+            ctx.translate(-r, -r);
+
+            const cx = r;
+            const cy = r;
+            const stroke = 2.26219;
+            const s = r / 26.5; // scale from original 53x53
+            ctx.scale(s, s);
+            ctx.lineWidth = stroke;
+            ctx.lineCap = 'butt';
+            ctx.strokeStyle = color;
+            ctx.fillStyle = color;
+
+            // circle
+            ctx.beginPath();
+            ctx.arc(26.5, 26.5, 25.3689, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // eyes X
+            ctx.beginPath();
+            ctx.moveTo(10.5039, 16.3213);
+            ctx.lineTo(20.2227, 26.0405);
+            ctx.moveTo(10.5039, 26.0403);
+            ctx.lineTo(20.2231, 16.3215);
+            ctx.moveTo(32.9131, 16.3213);
+            ctx.lineTo(42.6319, 26.0405);
+            ctx.moveTo(32.9131, 26.0403);
+            ctx.lineTo(42.6323, 16.3215);
+            ctx.stroke();
+
+            // mouth shape (filled path approximation: quadratic curve)
+            ctx.beginPath();
+            // draw a sad curve with thickness using stroke + round caps
+            ctx.lineWidth = 5.2;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = color;
+            ctx.moveTo(18.8, 37.4);
+            ctx.quadraticCurveTo(26.5, 31.8, 34.2, 37.4);
+            ctx.stroke();
+
+            ctx.restore();
+        }
+
+        function resolveCanvasSize(cardEl, canvas, ctx) {
+            const r = cardEl.getBoundingClientRect();
+            const w = Math.max(1, Math.round(r.width));
+            const h = Math.max(1, Math.round(r.height));
+            const dpr = Math.min(2, window.devicePixelRatio || 1);
+            canvas.width = Math.round(w * dpr);
+            canvas.height = Math.round(h * dpr);
+            canvas.style.width = '100%';
+            canvas.style.height = '100%';
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            return { w, h, dpr };
+        }
+
+        function setup(cardEl) {
+            const placeholder = cardEl.querySelector('.site-card-placeholder');
+            const placeholderImg = placeholder?.querySelector('img');
+            if (!placeholder || !placeholderImg) return;
+
+            if (active?.cardEl && active.cardEl !== cardEl) teardown('switch-card');
+            if (active?.cardEl === cardEl) return;
+
+            const overlay = document.createElement('div');
+            overlay.className = 'site-card-physics';
+            overlay.setAttribute('aria-hidden', 'true');
+            cardEl.appendChild(overlay);
+
+            const canvas = document.createElement('canvas');
+            overlay.appendChild(canvas);
+            const ctx = canvas.getContext('2d');
+            if (!ctx) return;
+
+            placeholderImg.style.visibility = 'hidden';
+
+            let size = resolveCanvasSize(cardEl, canvas, ctx);
+
+            const radius = 26.5;
+            const icons = [];
+            // one centered
+            icons.push({
+                x: size.w / 2,
+                y: size.h / 2,
+                vx: rand(-1.0, 1.0),
+                vy: rand(-0.2, 0.2),
+                a: rand(-0.4, 0.4),
+                va: rand(-0.08, 0.08),
+                color: COLORS[0]
+            });
+            // 7 from top
+            for (let i = 0; i < 7; i++) {
+                icons.push({
+                    x: rand(radius, size.w - radius),
+                    y: -radius - i * (radius * 0.6),
+                    vx: rand(-1.8, 1.8),
+                    vy: rand(0.0, 0.2),
+                    a: rand(-0.7, 0.7),
+                    va: rand(-0.12, 0.12),
+                    color: COLORS[i + 1] || '#111'
+                });
+            }
+
+            // Heavier + smoother than the initial version
+            const physics = {
+                gravity: 2100,      // px/s^2
+                bounce: 0.52,       // lower = heavier feel
+                airDrag: 0.995,     // closer to 1 = less damping (we'll apply per-substep)
+                wallFriction: 0.86
+            };
+
+            const pointer = {
+                active: false,
+                down: false,
+                x: 0,
+                y: 0,
+                lastX: 0,
+                lastY: 0,
+                justDownAt: 0
+            };
+
+            function pointerPos(ev) {
+                const r = canvas.getBoundingClientRect();
+                return {
+                    x: (ev.clientX - r.left),
+                    y: (ev.clientY - r.top)
+                };
+            }
+
+            function onMove(ev) {
+                const p = pointerPos(ev);
+                pointer.active = true;
+                pointer.lastX = pointer.x;
+                pointer.lastY = pointer.y;
+                pointer.x = p.x;
+                pointer.y = p.y;
+            }
+            function onLeave() { pointer.active = false; pointer.down = false; }
+            function onDown(ev) {
+                const p = pointerPos(ev);
+                pointer.down = true;
+                pointer.justDownAt = Date.now();
+                pointer.x = p.x; pointer.y = p.y;
+                pointer.lastX = p.x; pointer.lastY = p.y;
+            }
+            function onUp() { pointer.down = false; }
+
+            canvas.addEventListener('pointermove', onMove);
+            canvas.addEventListener('pointerleave', onLeave);
+            canvas.addEventListener('pointerdown', onDown);
+            canvas.addEventListener('pointerup', onUp);
+
+            // forward click to card if it was a quick click (not a drag)
+            canvas.addEventListener('click', () => {
+                const dt = Date.now() - pointer.justDownAt;
+                if (dt < 220) cardEl.click();
+            });
+
+            function collide(a, b) {
+                const dx = b.x - a.x;
+                const dy = b.y - a.y;
+                const dist2 = dx * dx + dy * dy;
+                const min = radius * 2;
+                if (dist2 <= 0 || dist2 >= min * min) return;
+
+                const dist = Math.sqrt(dist2);
+                const nx = dx / dist;
+                const ny = dy / dist;
+                const overlap = (min - dist);
+
+                // separate
+                a.x -= nx * overlap * 0.5;
+                a.y -= ny * overlap * 0.5;
+                b.x += nx * overlap * 0.5;
+                b.y += ny * overlap * 0.5;
+
+                // impulse (simple elastic)
+                const rvx = b.vx - a.vx;
+                const rvy = b.vy - a.vy;
+                const velAlongNormal = rvx * nx + rvy * ny;
+                if (velAlongNormal > 0) return;
+                const e = physics.bounce;
+                // heavier feel: slightly reduce impulse transfer
+                const j = (-(1 + e) * velAlongNormal / 2) * 0.92; // equal mass
+                const ix = j * nx;
+                const iy = j * ny;
+                a.vx -= ix;
+                a.vy -= iy;
+                b.vx += ix;
+                b.vy += iy;
+            }
+
+            // Fixed timestep simulation (smoother, closer to Matter.js)
+            let lastT = performance.now();
+            let acc = 0;
+            const dt = 1 / 120;        // 120Hz physics
+            const maxFrame = 1 / 20;   // clamp huge tab-stalls
+
+            function integrate(subDt) {
+                const w = size.w;
+                const h = size.h;
+
+                // apply per-substep drag
+                const drag = Math.pow(physics.airDrag, subDt / dt);
+
+                for (const o of icons) {
+                    // mouse push (heavier feel: lower strength)
+                    if (pointer.active) {
+                        const dx = o.x - pointer.x;
+                        const dy = o.y - pointer.y;
+                        const d2 = dx * dx + dy * dy;
+                        const influenceR = radius * 2.75;
+                        if (d2 < influenceR * influenceR) {
+                            const d = Math.max(1, Math.sqrt(d2));
+                            const nx = dx / d;
+                            const ny = dy / d;
+                            const strength = pointer.down ? 0.55 : 0.22;
+                            const push = (1 - d / influenceR) * strength;
+                            // impulse in px/s
+                            o.vx += nx * push * 620;
+                            o.vy += ny * push * 620;
+                            o.va += (Math.random() - 0.5) * 0.012;
+                        }
+                    }
+
+                    o.vy += physics.gravity * subDt;
+
+                    o.vx *= drag;
+                    o.vy *= drag;
+                    o.va *= 0.992;
+
+                    o.x += o.vx * subDt;
+                    o.y += o.vy * subDt;
+                    o.a += o.va;
+
+                    // walls
+                    if (o.x < radius) { o.x = radius; o.vx = Math.abs(o.vx) * physics.bounce; o.vy *= physics.wallFriction; }
+                    if (o.x > w - radius) { o.x = w - radius; o.vx = -Math.abs(o.vx) * physics.bounce; o.vy *= physics.wallFriction; }
+                    if (o.y < radius) { o.y = radius; o.vy = Math.abs(o.vy) * physics.bounce; o.vx *= physics.wallFriction; }
+                    if (o.y > h - radius) { o.y = h - radius; o.vy = -Math.abs(o.vy) * physics.bounce; o.vx *= physics.wallFriction; }
+                }
+
+                for (let i = 0; i < icons.length; i++) {
+                    for (let j = i + 1; j < icons.length; j++) {
+                        collide(icons[i], icons[j]);
+                    }
+                }
+            }
+
+            function step(now = performance.now()) {
+                // size updates only when necessary (observer triggers),
+                // but re-checking here is cheap if not changing.
+                // keep it out of the inner substep loop.
+                // (If you see perf issues, we can fully event-drive this.)
+                size = resolveCanvasSize(cardEl, canvas, ctx);
+
+                const frame = clamp((now - lastT) / 1000, 0, maxFrame);
+                lastT = now;
+                acc += frame;
+
+                // Run multiple fixed steps to catch up
+                let steps = 0;
+                const maxSteps = 6;
+                while (acc >= dt && steps < maxSteps) {
+                    integrate(dt);
+                    acc -= dt;
+                    steps++;
+                }
+
+                // draw
+                ctx.clearRect(0, 0, size.w, size.h);
+                for (const o of icons) {
+                    drawIcon(ctx, o.x, o.y, radius, o.a, o.color);
+                }
+
+                active.raf = requestAnimationFrame(step);
+            }
+
+            const ro = new ResizeObserver(() => {
+                // no-op: step() recalculates size every frame, observer used to keep semantics with teardown
+            });
+            ro.observe(cardEl);
+
+            active = {
+                cardEl,
+                overlay,
+                canvas,
+                placeholderImg,
+                resizeObserver: ro,
+                raf: 0
+            };
+            active.raf = requestAnimationFrame(step);
+        }
+
+        function attach(cardEl) {
+            if (cardEl.dataset.physicsInit === '1') return;
+            cardEl.dataset.physicsInit = '1';
+
+            const hasPlaceholder = !!cardEl.querySelector('.site-card-placeholder');
+            if (!hasPlaceholder) return;
+
+            cardEl.addEventListener('mouseenter', () => setup(cardEl));
+            cardEl.addEventListener('mouseleave', () => teardown('leave'));
+        }
+
+        function attachAll() {
+            document.querySelectorAll('.site-card').forEach(attach);
+        }
+
+        function reset() {
+            teardown('reset');
+            attachAll();
+        }
+
+        return { reset, teardown };
+    })();
+
+    function cardHTML(site) {
+        const domains = site.site_domains?.map(sd => sd.domains).filter(Boolean) || [];
+        const first = domains[0];
+        const extra = domains.length - 1;
+        const img = firstMediaUrl(site?.screenshots);
+        const video = firstMediaUrl(site?.videos);
+
+        const placeholderHTML = `<div class="site-card-placeholder" aria-hidden="true"><img src="/assets/svg/empty-thumbnail.svg" alt=""></div>`;
+        const mediaHTML = video
+            ? `<video class="card-video" src="${video}" poster="${img}" muted loop playsinline preload="metadata"></video>`
+            : (img ? `<img src="${img}" alt="${escHtml(site.title)}" loading="lazy">` : placeholderHTML);
+
+        const allTagsHTML = domains.map(d => `<span class="site-card-tag">${escHtml(d.name)}</span>`).join('');
+
+        return `
+            <div class="site-card" onclick="viewProject('${site.slug}')">
+                ${mediaHTML}
+                <div class="site-card-overlay"></div>
+                <span class="site-card-title">${escHtml(site.title)}</span>
+                <div class="site-card-tags">
+                    ${first ? `<span class="site-card-tag">${escHtml(first.name)}</span>` : ''}
+                    ${extra > 0 ? `<span class="site-card-tag-more" data-extra="${extra}">+${extra}</span>` : ''}
+                    ${extra > 0 ? `<div class="site-card-tags-list">${allTagsHTML}</div>` : ''}
+                </div>
+            </div>`;
+    }
+
+    function viewProject(slug) {
+        if (slug) window.location.href = `/Page/project?slug=${encodeURIComponent(slug)}`;
+    }
+
+    function escHtml(str) {
+        return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function mediaUrl(item) {
+        if (!item) return '';
+        if (typeof item === 'string') {
+            return typeof resolvePublicAssetUrl === 'function' ? resolvePublicAssetUrl(item) : item;
+        }
+        if (typeof buildMediaUrl === 'function') return buildMediaUrl(item);
+        return item.url || item.public_url || item.publicUrl || item.path || item.src || '';
+    }
+
+    function firstMediaUrl(list) {
+        if (!Array.isArray(list) || list.length === 0) return '';
+        return mediaUrl(list[0]);
+    }
+
+    document.addEventListener('DOMContentLoaded', loadData);
+</script>
+</body>
+</html>

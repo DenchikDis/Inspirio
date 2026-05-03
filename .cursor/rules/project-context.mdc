@@ -1,0 +1,97 @@
+---
+description: Полный контекст проекта Inspire — структура, БД, страницы, соглашения
+alwaysApply: true
+---
+
+# Inspire — контекст проекта (100%)
+
+## Назначение проекта
+
+**I.N.S.P.I.R.I.O** — сайт-портфолио проектов с админ-панелью. Данные хранятся в Supabase, фронт — статические HTML/CSS/JS. Дизайн из Figma.
+
+## Стек и окружение
+
+- **Фронт**: HTML5, CSS (в т.ч. design-tokens.css), ванильный JavaScript. Без фреймворков.
+- **БД и бэкенд**: Supabase (PostgreSQL, Storage, RLS). Клиент: `@supabase/supabase-js@2`.
+- **Конфиг**: `supabase-config.js` — `SUPABASE_URL`, `SUPABASE_ANON_KEY`; после загрузки скрипта Supabase доступен как `window.supabase` и глобально `supabase`.
+- **Деплой**: Vercel. Роутинг в `vercel.json`: `/` → `/Page/index.html`, статика из `/assets/`, `/Page/`.
+- **Локальный запуск**: `npm run dev` (serve на порту 3000) или `start.bat` / `start.ps1`.
+
+## Структура каталогов
+
+```
+Inspire/
+├── Page/                    # Все страницы сайта
+│   ├── index.html           # Главная — список карточек проектов
+│   ├── project.html         # Страница проекта по ?slug= (или ?id= с редиректом на slug)
+│   ├── info.html            # Альтернативная страница проекта (по slug)
+│   ├── kit.html             # UI-kit / дизайн-система (компоненты, токены)
+│   ├── admin.html           # Админ-панель (пароль, создание/редактирование карточек и доменов)
+│   └── ARCHIVE/             # Устаревшие файлы (author, admin-author)
+├── assets/svg/              # Иконки (back, funnel, globe-2-1, logo)
+├── sql/                     # Миграции и настройка Supabase
+│   ├── supabase-setup.sql   # Основные таблицы и RLS
+│   ├── migration-multiple-domains.sql  # Удаление domain_id из cards, переход на card_categories
+│   ├── migration-add-slug-to-cards.sql
+│   └── setup-storage-policies.sql       # Политики для bucket "Medias"
+├── design-tokens.css        # Переменные из Figma (цвета, типографика, тени, отступы)
+├── styles.css               # Общие стили (используется админкой)
+├── supabase-config.js       # Единственный источник URL и anon key
+├── vercel.json              # Rewrites и headers для Vercel
+├── package.json             # scripts: dev, deploy, deploy:preview
+├── README.md                # Figma и общее описание
+├── SUPABASE_SETUP.md        # Инструкция по настройке Supabase
+├── DEPLOY.md                # Инструкция по деплою на Vercel
+└── FIGMA_FILE_INFO.md       # Ссылка на Figma, ключ файла, структура
+```
+
+## База данных (Supabase)
+
+### Таблицы
+
+- **authors** — авторы (id, name, slug, avatar_url, bio, website, created_at, updated_at). В UI авторы **архивированы**: в админке не выбираются, на фронте опционально показываются по `card.authors` или fallback `card.author_name` / `card.author_image`.
+- **categories** — категории проектов. В интерфейсе называются **«домены»** (админка: «Управление доменами», «Выберите домены»). Поля: id, name, slug, created_at.
+- **cards** — карточки проектов: id, title, slug (UNIQUE), description, image_url, image_name, thumbnail_url, author_id (FK → authors, может быть NULL), created_at, updated_at. **Нет поля domain_id** — связь с доменами только через card_categories.
+- **card_categories** — связь M:N карточка ↔ категория (домен). Поля: id, card_id (FK → cards ON DELETE CASCADE), category_id (FK → categories ON DELETE CASCADE), UNIQUE(card_id, category_id).
+- **project_images** — галерея изображений проекта: id, card_id (FK → cards ON DELETE CASCADE), image_url, image_name, display_order, created_at.
+
+### Storage
+
+- Bucket **Medias**: публичное чтение; загрузка из админки (thumbnails в `thumbnails/`, галерея в `projects/`). Политики в `sql/setup-storage-policies.sql`.
+
+### Важные соглашения по данным
+
+- Навигация по проекту везде по **slug** (например `project.html?slug=my-project`). Параметр `?id=` поддерживается только для редиректа на `?slug=`.
+- Slug карточки генерируется из title (латиница, цифры, дефисы; лишние символы и пробелы убираются).
+- У одной карточки может быть **несколько доменов (категорий)** — только через card_categories. При удалении категории проверять использование нужно по **card_categories** (category_id), а не по несуществующему domain_id в cards.
+- В запросах Supabase **не** вставлять комментарии вида `-- АРХИВ: ...` внутрь строки `.select(\`...\`)` — это ломает разбор PostgREST.
+
+## Страницы и их роль
+
+- **index.html** — главная. Загружает карточки из `cards` с `card_categories` и `categories`. Две секции: «Featured» (первые 4 карточки, дублируются для скролла) и «Все карточки». Клик по карточке → `project.html?slug=...`.
+- **project.html** — детальная страница проекта. Читает slug из URL, запрашивает карточку с card_categories и authors, project_images, связанные проекты. Показывает заголовок, автора (если есть), домены (категории), шрифты/фреймворк (пока статичные), галерею, кнопку Visit (URL из slug), блок «Похожие проекты».
+- **info.html** — по смыслу та же детальная страница проекта (другая вёрстка/контент). Та же логика: slug, Supabase, авторы/домены/галерея.
+- **kit.html** — UI-kit: токены (цвета, типографика, эффекты), примеры карточек (данные из Supabase или статичные), кнопки и т.д.
+- **admin.html** — админка. Защита паролем (sessionStorage `admin_authenticated`, пароль в коде). Табы: «Создание» (форма новой карточки + домены), «Управление карточками», «Управление доменами». Создание карточки: title, thumbnail, до 20 изображений галереи, выбор доменов (чекбоксы из categories), предпросмотр и сохранение. Загрузка файлов в Medias; запись в cards, card_categories, project_images. Редактирование карточки: title, домены, опционально новый thumbnail. Удаление домена проверяет использование в **card_categories** и предупреждает о количестве карточек.
+
+## Термины и язык
+
+- В коде и БД: **categories** = домены в UI. «Домен» = одна запись в таблице categories.
+- **Карточка** = одна запись в cards (проект).
+- Интерфейс и сообщения пользователю — на **русском** (кнопки, заголовки, ошибки, подсказки).
+- Комментарии в коде — русские и английские; блоки с пометкой **АРХИВ** — старая логика авторов, не удалять без явной задачи.
+
+## Частые команды пользователя и как их понимать
+
+- «Исправить баги в админке» — проверить admin.html: форма, домены, карточки, удаление (в т.ч. проверка по card_categories), сообщения, валидация.
+- «Проверить главную / проекты» — index.html, project.html (и при необходимости info.html): загрузка карточек по slug, отображение категорий/доменов, переходы, авторы (если есть).
+- «Настроить деплой / Vercel» — vercel.json, DEPLOY.md, при необходимости переменные окружения (Supabase не в репозитории).
+- «Добавить поле в карточку» — таблица cards, форма в admin.html, отображение на index/project/info и в kit при необходимости.
+- «Работа с доменами» — всегда таблица categories и связь card_categories; domain_id в cards не существует.
+
+## Ограничения и предостережения
+
+- Не хардкодить Supabase URL/ключи вне `supabase-config.js`.
+- Не полагаться на domain_id в cards — только card_categories.
+- При изменении схемы БД обновлять `sql/` и при необходимости SUPABASE_SETUP.md.
+- Storage: в коде используется только bucket **Medias** (не card-images / author-avatars из старой документации).

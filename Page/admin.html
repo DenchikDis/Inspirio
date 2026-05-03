@@ -1,0 +1,3687 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <title>Админ-панель - I.N.S.P.I.R.I.O</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        body {
+            background-color: #F6F4F0;
+            min-height: 100vh;
+        }
+
+        .admin-container {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 40px;
+            background-color: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            height: 100%;
+            width: 100%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .admin-container > * {
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .admin-container form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @media (max-width: 768px) {
+            .admin-container {
+                margin: 20px;
+                padding: 20px;
+            }
+        }
+
+        .admin-header {
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .admin-header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 10px;
+        }
+
+        .admin-header p {
+            color: #666666;
+            font-size: 14px;
+        }
+
+        .form-section {
+            margin-bottom: 40px;
+            width: fit-content;
+            height: fit-content;
+            align-self: flex-start;
+        }
+
+        .form-section h2 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #000000;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333333;
+            font-size: 14px;
+        }
+
+        .form-group input:not([type="checkbox"]),
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: 'Urbanist', sans-serif;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #000000;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-group small {
+            display: block;
+            margin-top: 6px;
+            color: #666666;
+            font-size: 12px;
+        }
+
+        .image-preview {
+            margin-top: 12px;
+            max-width: 300px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid #e0e0e0;
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .thumb-library-grid {
+            margin-top: 10px;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+        }
+        @media (max-width: 900px) {
+            .thumb-library-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+        .thumb-library-item {
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #fff;
+            cursor: pointer;
+            padding: 0;
+            appearance: none;
+            -webkit-appearance: none;
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            position: relative;
+        }
+        .thumb-library-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .thumb-library-item.selected {
+            outline: 2px solid #000;
+            outline-offset: 0;
+        }
+
+        .images-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .image-preview-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid #e0e0e0;
+            aspect-ratio: 16/10;
+        }
+
+        .image-preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .image-preview-item .remove-image {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: rgba(255, 0, 0, 0.8);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+
+        .image-preview-item .remove-image:hover {
+            background: rgba(255, 0, 0, 1);
+        }
+
+        .image-counter {
+            margin-top: 8px;
+            font-size: 12px;
+            color: #666666;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .checkbox-item:hover {
+            background-color: #e8e8e8;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+            cursor: pointer;
+        }
+
+        .checkbox-item label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: 400;
+        }
+
+        .submit-button {
+            background-color: #000000;
+            color: #ffffff;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-family: 'Urbanist', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+
+        .submit-button:hover {
+            background-color: #333333;
+        }
+
+        .submit-button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .btn-loading {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.45);
+            border-top-color: rgba(255, 255, 255, 0.95);
+            animation: spin 0.8s linear infinite;
+            flex: 0 0 auto;
+        }
+
+        .spinner.dark {
+            border-color: rgba(0, 0, 0, 0.18);
+            border-top-color: rgba(0, 0, 0, 0.55);
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .message {
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            font-size: 14px;
+        }
+
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #000000;
+            text-decoration: none;
+            font-weight: 600;
+            transition: opacity 0.3s ease;
+        }
+
+        .back-link:hover {
+            opacity: 0.6;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666666;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .preview-button {
+            background-color: #666666;
+            color: #ffffff;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-family: 'Urbanist', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+
+        .preview-button:hover {
+            background-color: #555555;
+        }
+
+        .preview-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .preview-modal-content {
+            background-color: #ffffff;
+            margin: 50px auto;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 800px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .preview-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .preview-modal-header h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #000000;
+        }
+
+        .close-preview {
+            background: none;
+            border: none;
+            font-size: 32px;
+            cursor: pointer;
+            color: #666666;
+            line-height: 1;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+        }
+
+        .close-preview:hover {
+            color: #000000;
+        }
+
+        .preview-section {
+            margin-bottom: 30px;
+        }
+
+        .preview-section h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #000000;
+        }
+
+        .preview-section p {
+            color: #666666;
+            margin-bottom: 8px;
+        }
+
+        .preview-images {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .preview-images img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .domains-combobox {
+            border: 1px solid var(--color-d6d6d6);
+            border-radius: 10px;
+            background: var(--snow_white);
+            overflow: hidden;
+            transition: border-color 0.15s;
+        }
+
+        .domains-combobox:focus-within {
+            border-color: var(--black);
+        }
+
+        .domain-search-input {
+            width: 100%;
+            box-sizing: border-box;
+            border: none;
+            border-bottom: 1px solid var(--color-d6d6d6);
+            border-radius: 0;
+            padding: 12px 14px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--black);
+            outline: none;
+            background: var(--snow_white);
+            transition: border-color 0.15s, background 0.15s;
+        }
+
+        .domain-search-input::placeholder {
+            color: var(--color-a3a3a3);
+        }
+
+        .domain-search-input:focus {
+            background: var(--snow_white);
+            border-bottom-color: var(--black);
+        }
+
+        .domains-checkbox-list {
+            max-height: 200px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 6px;
+            background: #ffffff !important;
+        }
+
+        .domains-checkbox-list::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .domains-checkbox-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .domains-checkbox-list::-webkit-scrollbar-thumb {
+            background: var(--color-d6d6d6);
+            border-radius: 4px;
+        }
+
+        .domains-checkbox-list label,
+        .form-group .domains-checkbox-list label {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--black);
+            user-select: none;
+            margin-bottom: 0;
+            border-radius: 6px;
+            transition: background 0.12s;
+        }
+
+        .domains-checkbox-list label:hover,
+        .form-group .domains-checkbox-list label:hover {
+            background: var(--color-f2f2f2);
+        }
+
+        .domains-checkbox-list label input[type="checkbox"],
+        .domain-checkbox,
+        .edit-domain-checkbox {
+            flex-shrink: 0;
+            margin: 0;
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+        }
+
+        .domains-checkbox-list label span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            flex: 1;
+        }
+
+        .domain-no-results {
+            padding: 10px 10px;
+            color: var(--color-a3a3a3);
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+            white-space: normal;
+        }
+
+        /* Табы для переключения между секциями */
+        .admin-tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .admin-tab {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            font-family: 'Urbanist', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #666666;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .admin-tab:hover {
+            color: #000000;
+        }
+
+        .admin-tab.active {
+            color: #000000;
+            border-bottom-color: #000000;
+        }
+
+        .admin-section {
+            display: none;
+        }
+
+        .admin-section.active {
+            display: block;
+        }
+
+        /* Список карточек */
+        .cards-list {
+            display: grid;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card-item {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .card-item-image {
+            width: 150px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .card-item-content {
+            flex: 1;
+        }
+
+        .card-item-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #000000;
+        }
+
+        .card-item-meta {
+            font-size: 14px;
+            color: #666666;
+            margin-bottom: 12px;
+        }
+
+        .card-item-submeta {
+            font-size: 12px;
+            color: #777777;
+            margin-top: 6px;
+        }
+
+        .card-item-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-edit {
+            background-color: #000000;
+            color: #ffffff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-edit:hover {
+            background-color: #333333;
+        }
+
+        .btn-delete {
+            background-color: #dc3545;
+            color: #ffffff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-delete:hover {
+            background-color: #c82333;
+        }
+
+        .btn-secondary {
+            background-color: #666666;
+            color: #ffffff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background-color: #555555;
+        }
+
+        .btn-link {
+            background-color: #1f6feb;
+            color: #ffffff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, opacity 0.3s ease;
+        }
+
+        .btn-link:hover {
+            background-color: #1b5fcc;
+        }
+
+        .btn-link:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+
+        .sections-modal-grid {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .sections-modal-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .sections-list {
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .sections-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 12px;
+            border-bottom: 1px solid #e0e0e0;
+            background: #fafafa;
+        }
+
+        .sections-list-header h3 {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .section-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .section-row:last-child {
+            border-bottom: none;
+        }
+
+        .section-row.active {
+            background: #f5f5f5;
+        }
+
+        .section-drag {
+            width: 18px;
+            height: 18px;
+            display: grid;
+            place-items: center;
+            opacity: 0.6;
+            cursor: grab;
+        }
+
+        .section-title {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 600;
+            color: #111;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .section-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .icon-btn {
+            width: 28px;
+            height: 28px;
+            border: 1px solid #e0e0e0;
+            background: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .icon-btn:hover {
+            background: #f3f3f3;
+        }
+
+        .media-panel {
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .media-panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 12px;
+            border-bottom: 1px solid #e0e0e0;
+            background: #fafafa;
+            flex-wrap: wrap;
+        }
+
+        .media-panel-header h3 {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+            padding: 12px;
+        }
+
+        .media-item {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+            aspect-ratio: 16 / 10;
+            background: #f3f3f3;
+        }
+
+        .media-item img, .media-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .media-item-badge {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 999px;
+            background: rgba(0,0,0,0.75);
+            color: #fff;
+        }
+
+        .media-item-actions {
+            position: absolute;
+            right: 8px;
+            top: 8px;
+            display: flex;
+            gap: 6px;
+        }
+
+        .cover-star {
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 999px;
+            background: rgba(255, 215, 0, 0.92);
+            color: #111;
+        }
+
+        .drop-hint {
+            padding: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* Список доменов */
+        .domains-list {
+            display: grid;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .domain-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .domain-item-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #000000;
+        }
+
+        .domain-item-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Модальное окно редактирования */
+        .edit-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            overflow-y: auto;
+        }
+
+        .edit-modal.active {
+            display: block;
+        }
+
+        .edit-modal-content {
+            background-color: #ffffff;
+            margin: 50px auto;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 800px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .edit-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .edit-modal-header h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #000000;
+        }
+
+        .close-edit-modal {
+            background: none;
+            border: none;
+            font-size: 32px;
+            cursor: pointer;
+            color: #666666;
+            line-height: 1;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+        }
+
+        .close-edit-modal:hover {
+            color: #000000;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #666666;
+        }
+
+        .empty-state h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .loading-spinner {
+            text-align: center;
+            padding: 20px;
+            color: #666666;
+        }
+
+        /* Password Protection */
+        .password-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .password-overlay.active {
+            display: flex;
+        }
+
+        .password-modal {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .password-modal h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #000000;
+            text-align: center;
+        }
+
+        .password-modal input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: 'Urbanist', sans-serif;
+            font-size: 16px;
+            margin-bottom: 16px;
+        }
+
+        .password-modal input:focus {
+            outline: none;
+            border-color: #000000;
+        }
+
+        .password-modal button {
+            width: 100%;
+            background-color: #000000;
+            color: #ffffff;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-family: 'Urbanist', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .password-modal button:hover {
+            background-color: #333333;
+        }
+
+        .password-error {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 8px;
+            text-align: center;
+            display: none;
+        }
+
+        .password-error.show {
+            display: block;
+        }
+    </style>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="../supabase-config.js"></script>
+</head>
+<body>
+    <!-- Top toast (global) -->
+    <div id="topToast" style="position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:20000;display:none;max-width:min(720px, calc(100% - 32px));padding:14px 16px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,0.18);font-family:'Urbanist', sans-serif;font-size:14px;font-weight:600;"></div>
+
+    <!-- Password Protection Overlay -->
+    <div class="password-overlay active" id="passwordOverlay">
+        <div class="password-modal">
+            <h2>Введите пароль</h2>
+            <input type="password" id="passwordInput" placeholder="Пароль" autocomplete="off">
+            <div class="password-error" id="passwordError">Неверный пароль. Попробуйте снова.</div>
+            <button type="button" onclick="checkPassword()">Войти</button>
+        </div>
+    </div>
+
+    <div class="admin-container" id="adminContent">
+        <div class="form-section">
+            <a href="index.html" class="back-link">← Назад к проектам</a>
+            
+            <div class="admin-header">
+                <h1>Админ-панель</h1>
+                <p>Управление проектами и доменами</p>
+            </div>
+
+            <!-- Табы для переключения между секциями -->
+            <div class="admin-tabs">
+                <button class="admin-tab active" data-tab="create">Создание</button>
+                <button class="admin-tab" data-tab="manage-cards">Управление карточками</button>
+                <button class="admin-tab" data-tab="manage-domains">Управление доменами</button>
+            </div>
+
+            <!-- Секция создания новой карточки -->
+            <div class="admin-section active" id="create-section">
+                <div class="admin-header">
+                    <h2>Загрузка новой карточки</h2>
+                    <p>Заполните форму для добавления проекта в базу данных</p>
+                </div>
+
+            <div id="message"></div>
+
+            <form id="cardForm">
+            <!-- Информация о проекте -->
+            <div class="form-section">
+                <h2>Информация о проекте</h2>
+                
+                <div class="form-group">
+                    <label for="title">Название проекта *</label>
+                    <input type="text" id="title" name="title" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="thumbnail">Thumbnail изображение *</label>
+                    <input type="file" id="thumbnail" name="thumbnail" accept="image/*" required>
+                    <small>Миниатюра для карточки проекта. Рекомендуемый размер: 391×292px</small>
+                    <div class="image-preview" id="thumbnailPreview" style="display: none;">
+                        <img id="previewThumbnail" src="" alt="Thumbnail Preview">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="images">Изображения проекта (до 20 шт) *</label>
+                    <input type="file" id="images" name="images" accept="image/*" multiple required>
+                    <small>Выберите от 1 до 20 изображений для галереи проекта</small>
+                    <div id="imagesPreview" class="images-preview-grid"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="video">Видео проекта</label>
+                    <input type="file" id="video" name="video" accept="video/*">
+                    <small>Выберите видео для проекта (mp4, webm, mov и др.)</small>
+                    <div class="video-preview" id="videoPreview" style="display: none;">
+                        <video id="previewVideo" width="300" height="200" controls style="border-radius: 8px;">
+                            Ваш браузер не поддерживает видео элемент
+                        </video>
+                    </div>
+                </div>
+            </div>
+
+            <!-- АРХИВ: Автор (закомментировано) -->
+            <!--
+            <div class="form-section">
+                <h2>Автор</h2>
+                
+                <div class="form-group">
+                    <label for="author">Выберите автора</label>
+                    <select id="author" name="author">
+                        <option value="">Загрузка авторов...</option>
+                    </select>
+                    <small>Если автора нет в списке, создайте его сначала (необязательно)</small>
+                </div>
+
+                <div class="form-group">
+                    <a href="admin-author.html" style="color: #000000; text-decoration: underline; font-size: 14px;">
+                        + Создать нового автора
+                    </a>
+                </div>
+            </div>
+            -->
+
+            <!-- Домены (комбо-бокс) -->
+            <div class="form-section">
+                <h2>Домены</h2>
+                <div class="form-group">
+                    <label>Выберите домены (можно несколько)</label>
+                    <div class="domains-combobox">
+                        <input type="text" id="domainSearchInput" class="domain-search-input" placeholder="Поиск или новый домен... (Enter — добавить)">
+                        <div id="domainsCheckboxContainer" class="domains-checkbox-list">
+                            <div class="loading">Загрузка доменов...</div>
+                        </div>
+                    </div>
+                    <small>Введите название для поиска. Если домен не найден — нажмите Enter для создания.</small>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>Расположение проекта</h2>
+                <div class="form-group">
+                    <label for="heroPosition">Выберите позицию проекта</label>
+                    <select id="heroPosition" name="heroPosition">
+                        <option value="site-card">Обычная карточка (site-card)</option>
+                        <option value="hero-small-card">Малая герой карточка (hero-small-card)</option>
+                        <option value="hero-big-card">Большая герой карточка (hero-big-card)</option>
+                    </select>
+                    <small>
+                        • hero-big-card: максимум 1 сайт. При добавлении 2-го, 1-ый перейдет на site-card<br>
+                        • hero-small-card: максимум 2 сайта. При добавлении 3-го, 1-ый перейдет на site-card<br>
+                        • site-card: обычная сетка проектов
+                    </small>
+                </div>
+            </div>
+
+            <!-- Кнопки отправки -->
+            <div class="button-group">
+                <button type="button" class="preview-button" id="previewButton">
+                    Предпросмотр
+                </button>
+                <button type="submit" class="submit-button" id="submitButton">
+                    Сохранить в базу данных
+                </button>
+            </div>
+        </form>
+            </div>
+
+            <!-- Секция управления карточками -->
+            <div class="admin-section" id="manage-cards-section">
+                <div class="admin-header">
+                    <h2>Управление карточками</h2>
+                    <p>Просмотр, редактирование и удаление карточек проектов</p>
+                </div>
+                <div id="cardsList" class="loading-spinner">Загрузка карточек...</div>
+            </div>
+
+            <!-- Секция управления доменами -->
+            <div class="admin-section" id="manage-domains-section">
+                <div class="admin-header">
+                    <h2>Управление доменами</h2>
+                    <p>Просмотр, редактирование и удаление доменов</p>
+                </div>
+                <div id="domainsList" class="loading-spinner">Загрузка доменов...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно редактирования карточки -->
+    <div id="editCardModal" class="edit-modal">
+        <div class="edit-modal-content">
+            <div class="edit-modal-header">
+                <h2>Редактировать карточку</h2>
+                <button class="close-edit-modal" onclick="closeEditCardModal()">×</button>
+            </div>
+            <form id="editCardForm">
+                <input type="hidden" id="editCardId">
+                
+                <div class="form-group">
+                    <label for="editTitle">Название проекта *</label>
+                    <input type="text" id="editTitle" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="editHeroPosition">Расположение проекта</label>
+                    <select id="editHeroPosition" name="editHeroPosition">
+                        <option value="site-card">Обычная карточка (site-card)</option>
+                        <option value="hero-small-card">Малая герой карточка (hero-small-card)</option>
+                        <option value="hero-big-card">Большая герой карточка (hero-big-card)</option>
+                    </select>
+                    <small>
+                        • hero-big-card: максимум 1 сайт. При добавлении 2-го, 1-ый перейдет на site-card<br>
+                        • hero-small-card: максимум 2 сайта. При добавлении 3-го, 1-ый перейдет на site-card<br>
+                        • site-card: обычная сетка проектов
+                    </small>
+                </div>
+
+                <!-- АРХИВ: Автор (закомментировано) -->
+                <!--
+                <div class="form-group">
+                    <label for="editAuthor">Автор</label>
+                    <select id="editAuthor">
+                        <option value="">Не выбран</option>
+                    </select>
+                </div>
+                -->
+
+                <div class="form-group">
+                    <label>Домены (можно несколько)</label>
+                    <div class="domains-combobox">
+                        <input type="text" id="editDomainSearchInput" class="domain-search-input" placeholder="Поиск или новый домен... (Enter — добавить)">
+                        <div id="editDomainsCheckboxContainer" class="domains-checkbox-list">
+                            <div class="loading">Загрузка доменов...</div>
+                        </div>
+                    </div>
+                    <small>Введите название для поиска. Если домен не найден — нажмите Enter для создания.</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Текущий Thumbnail</label>
+                    <div id="editThumbnailPreview" class="image-preview" style="display: none;">
+                        <img id="editThumbnailImg" src="" alt="Thumbnail">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="editThumbnail">Новый Thumbnail (оставьте пустым, чтобы не менять)</label>
+                    <input type="file" id="editThumbnail" accept="image/*">
+                </div>
+
+                <div class="form-group">
+                    <label for="editThumbnailLibrarySelect">Или выбрать Thumbnail из Sections & Media (без загрузки)</label>
+                    <select id="editThumbnailLibrarySelect" style="width:100%;padding:12px;border:2px solid #e0e0e0;border-radius:12px;background:white;">
+                        <option value="">— Не выбрано —</option>
+                    </select>
+                    <div id="editThumbnailLibraryGrid" class="thumb-library-grid" style="display:none;"></div>
+                    <small id="editThumbnailLibraryHint" style="display:block;margin-top:6px;color:#666;font-size:12px;">
+                        Покажет изображения, которые уже загружены в Sections & Media для этого проекта.
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label>Текущее видео</label>
+                    <small id="editVideoHint" style="display:block;margin-top:6px;color:#666;font-size:12px;">Нет видео</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="editVideo">Новое видео (оставьте пустым, чтобы не менять)</label>
+                    <input type="file" id="editVideo" accept="video/*">
+                    <small>Видео для карточки/проекта. Если выбрано — заменит текущее.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="editVideoLibrarySelect">Или выбрать видео из Sections & Media (без загрузки)</label>
+                    <select id="editVideoLibrarySelect" style="width:100%;padding:12px;border:2px solid #e0e0e0;border-radius:12px;background:white;">
+                        <option value="">— Не выбрано —</option>
+                    </select>
+                    <small id="editVideoLibraryHint" style="display:block;margin-top:6px;color:#666;font-size:12px;">
+                        Покажет видео, которые уже загружены в Sections & Media для этого проекта.
+                    </small>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="preview-button" onclick="closeEditCardModal()">Отмена</button>
+                    <button type="submit" class="submit-button">Сохранить изменения</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Модальное окно Sections & Media -->
+    <div id="sectionsModal" class="edit-modal">
+        <div class="edit-modal-content">
+            <div class="edit-modal-header">
+                <h2 id="sectionsModalTitle">Sections & Media</h2>
+                <button class="close-edit-modal" onclick="closeSectionsModal()">×</button>
+            </div>
+            <input type="hidden" id="sectionsProjectId" />
+
+            <div class="sections-modal-grid">
+                <div class="sections-list">
+                    <div class="sections-list-header">
+                        <h3>Sections</h3>
+                        <button class="btn-secondary" type="button" onclick="addSectionPrompt()">+ Add</button>
+                    </div>
+                    <div id="sectionsListBody">
+                        <div class="drop-hint">Загрузка секций...</div>
+                    </div>
+                </div>
+
+                <div class="media-panel">
+                    <div class="media-panel-header">
+                        <h3 id="mediaPanelTitle">Media</h3>
+                        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                            <input id="mediaUploadInput" type="file" multiple accept="image/*,video/*" style="max-width:240px;" />
+                            <button class="btn-edit" id="mediaUploadButton" type="button" onclick="uploadMediaToActiveSection()">Upload</button>
+                        </div>
+                    </div>
+                    <div id="sectionsModalMessage" class="message" style="display:none;margin:12px;"></div>
+                    <div id="mediaGrid" class="media-grid">
+                        <div class="drop-hint">Выберите секцию слева.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно редактирования домена -->
+    <div id="editDomainModal" class="edit-modal">
+        <div class="edit-modal-content">
+            <div class="edit-modal-header">
+                <h2>Редактировать домен</h2>
+                <button class="close-edit-modal" onclick="closeEditDomainModal()">×</button>
+            </div>
+            <form id="editDomainForm">
+                <input type="hidden" id="editDomainId">
+                
+                <div class="form-group">
+                    <label for="editDomainName">Название домена *</label>
+                    <input type="text" id="editDomainName" required>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="preview-button" onclick="closeEditDomainModal()">Отмена</button>
+                    <button type="submit" class="submit-button">Сохранить изменения</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Модальное окно предпросмотра -->
+    <div id="previewModal" class="preview-modal">
+        <div class="preview-modal-content">
+            <div class="preview-modal-header">
+                <h2>Предпросмотр данных</h2>
+                <button class="close-preview" onclick="closePreview()">×</button>
+            </div>
+            <div id="previewContent"></div>
+            <div style="margin-top: 30px; display: flex; gap: 12px;">
+                <button type="button" class="preview-button" onclick="closePreview()" style="flex: 1;">
+                    Закрыть
+                </button>
+                <button type="button" class="submit-button" onclick="saveFromPreview()" style="flex: 1;">
+                    Сохранить в базу данных
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // АРХИВ: let authors = [];
+        let domains = [];
+        let selectedImages = [];
+        let selectedVideo = null;
+
+        function inspireR2UploadEnabled() {
+            const t = typeof window.UPLOAD_API_TOKEN === 'string' ? window.UPLOAD_API_TOKEN.trim() : '';
+            return t.length > 0;
+        }
+
+        function inspireUploadApiUrl(path) {
+            const base = typeof window.UPLOAD_API_BASE === 'string' ? window.UPLOAD_API_BASE.trim().replace(/\/$/, '') : '';
+            const p = path.startsWith('/') ? path : '/' + path;
+            if (!base) return p;
+            return base + p;
+        }
+
+        async function inspireSignUpload(body) {
+            const res = await fetch(inspireUploadApiUrl('/api/upload-sign'), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-inspire-upload-token': window.UPLOAD_API_TOKEN || ''
+                },
+                body: JSON.stringify(body)
+            });
+            const json = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(json.error || json.hint || res.statusText || 'upload-sign failed');
+            return json;
+        }
+
+        async function inspireCompleteUpload(body) {
+            const res = await fetch(inspireUploadApiUrl('/api/upload-complete'), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-inspire-upload-token': window.UPLOAD_API_TOKEN || ''
+                },
+                body: JSON.stringify(body)
+            });
+            const json = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(json.error || json.hint || res.statusText || 'upload-complete failed');
+            return json;
+        }
+
+        async function putFileToPresignedUrl(uploadUrl, file, headers) {
+            const h = new Headers(headers || {});
+            if (!h.has('Content-Type') && file.type) h.set('Content-Type', file.type);
+            const res = await fetch(uploadUrl, { method: 'PUT', body: file, headers: h });
+            if (!res.ok) throw new Error(`R2 PUT failed: ${res.status} ${await res.text()}`);
+        }
+
+        async function uploadBlobToR2(file) {
+            const mime = file.type || 'application/octet-stream';
+            const sign = await inspireSignUpload({
+                flow: 'blob',
+                filename: file.name || 'file',
+                mime,
+                size_bytes: file.size
+            });
+            await putFileToPresignedUrl(sign.upload_url, file, sign.upload_headers);
+            const done = await inspireCompleteUpload({ key: sign.key, flow: 'blob' });
+            return done.public_url;
+        }
+
+        async function uploadSectionMediaToR2(file, { sectionId, projectId, order }) {
+            const mime = file.type || 'application/octet-stream';
+            const isVideo = mime.startsWith('video/');
+            const sign = await inspireSignUpload({
+                flow: 'media',
+                section_id: sectionId,
+                project_id: projectId,
+                type: isVideo ? 'video' : 'image',
+                filename: file.name || 'file',
+                mime,
+                size_bytes: file.size,
+                order: typeof order === 'number' ? order : 0
+            });
+            await putFileToPresignedUrl(sign.upload_url, file, sign.upload_headers);
+            const done = await inspireCompleteUpload({ flow: 'media', media_id: sign.media_id, key: sign.key });
+            return done.media;
+        }
+
+        // Функция для генерации slug из title
+        function generateSlug(text) {
+            if (!text) return '';
+            return text
+                .toLowerCase()
+                .replace(/[^a-z0-9\s-]/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-')
+                .trim();
+        }
+
+        // АРХИВ: Загрузка авторов (закомментировано)
+        /*
+        let authors = [];
+        async function loadAuthors() {
+            try {
+                const { data, error } = await supabase
+                    .from('authors')
+                    .select('*')
+                    .order('name');
+
+                if (error) {
+                    console.error('Ошибка загрузки авторов:', error);
+                    showMessage('Ошибка загрузки авторов', 'error');
+                    return;
+                }
+
+                authors = data || [];
+                const select = document.getElementById('author');
+                select.innerHTML = '<option value="">Выберите автора</option>';
+                
+                authors.forEach(author => {
+                    const option = document.createElement('option');
+                    option.value = author.id;
+                    option.textContent = author.name;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Ошибка:', error);
+                showMessage('Ошибка подключения к базе данных', 'error');
+            }
+        }
+        */
+
+        // Загрузка доменов из таблицы domains (мульти-выбор через чекбоксы)
+        async function loadDomains() {
+            try {
+                const { data, error } = await supabase
+                    .from('domains')
+                    .select('*')
+                    .order('name');
+
+                if (error) {
+                    console.error('Ошибка загрузки доменов:', error);
+                    showMessage('Ошибка загрузки доменов', 'error');
+                    return;
+                }
+
+                domains = data || [];
+                const container = document.getElementById('domainsCheckboxContainer');
+                container.innerHTML = '';
+                
+                if (domains.length === 0) {
+                    container.innerHTML = '<div style="color: #999; font-size: 14px;">Домены не найдены. Создайте первый домен.</div>';
+                    return;
+                }
+                
+                // Создаем чекбоксы для каждого домена
+                domains.forEach(domain => {
+                    const label = document.createElement('label');
+                    label.style.cssText = 'display:flex;flex-direction:row;align-items:center;gap:6px;padding:4px 0;cursor:pointer;font-size:14px;font-weight:400;color:#333;margin:0;';
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.value = domain.id;
+                    checkbox.id = `domain_${domain.id}`;
+                    checkbox.className = 'domain-checkbox';
+
+                    const span = document.createElement('span');
+                    span.textContent = domain.name;
+
+                    label.appendChild(checkbox);
+                    label.appendChild(span);
+                    container.appendChild(label);
+                });
+            } catch (error) {
+                console.error('Ошибка:', error);
+                showMessage('Ошибка подключения к базе данных', 'error');
+            }
+        }
+        
+        // Получить выбранные домены (ID)
+        function getSelectedDomainIds() {
+            const checkboxes = document.querySelectorAll('.domain-checkbox:checked');
+            return Array.from(checkboxes).map(cb => cb.value);
+        }
+
+        // Вспомогательная функция создания домена (используется и в создании, и в редактировании)
+        async function createDomainByName(name) {
+            const { data, error } = await supabase
+                .from('domains')
+                .insert({ name })
+                .select()
+                .single();
+            if (error) {
+                if (error.code === '23505') throw new Error('Домен с таким названием уже существует');
+                throw new Error(`Ошибка создания домена: ${error.message}`);
+            }
+            return data;
+        }
+
+        // Фильтрация чекбоксов по поисковому запросу
+        function filterDomainCheckboxes(containerId, query) {
+            const container = document.getElementById(containerId);
+            const labels = container.querySelectorAll('label');
+            const q = query.toLowerCase().trim();
+            let visibleCount = 0;
+
+            labels.forEach(label => {
+                const text = label.textContent.trim().toLowerCase();
+                const match = !q || text.includes(q);
+                label.style.display = match ? '' : 'none';
+                if (match) visibleCount++;
+            });
+
+            // Показать подсказку "нажмите Enter" если нет точного совпадения
+            let hint = container.querySelector('.domain-no-results');
+            const exactMatch = q && Array.from(labels).some(l => l.textContent.trim().toLowerCase() === q);
+            if (q && !exactMatch) {
+                if (!hint) {
+                    hint = document.createElement('div');
+                    hint.className = 'domain-no-results';
+                    container.appendChild(hint);
+                }
+                hint.textContent = `Нажмите Enter, чтобы создать "${query}"`;
+                hint.style.display = '';
+            } else if (hint) {
+                hint.style.display = 'none';
+            }
+        }
+
+        // Комбо-бокс: поиск в форме создания
+        document.getElementById('domainSearchInput').addEventListener('input', function() {
+            filterDomainCheckboxes('domainsCheckboxContainer', this.value);
+        });
+
+        document.getElementById('domainSearchInput').addEventListener('keydown', async function(e) {
+            if (e.key !== 'Enter') return;
+            e.preventDefault();
+            const name = this.value.trim();
+            if (!name) return;
+
+            const exactMatch = domains.find(d => d.name.toLowerCase() === name.toLowerCase());
+            if (exactMatch) {
+                const cb = document.getElementById(`domain_${exactMatch.id}`);
+                if (cb) { cb.checked = true; cb.closest('label').style.display = ''; }
+                this.value = '';
+                filterDomainCheckboxes('domainsCheckboxContainer', '');
+                return;
+            }
+
+            try {
+                const newDomain = await createDomainByName(name);
+                domains.push(newDomain);
+                await loadDomains();
+                const cb = document.getElementById(`domain_${newDomain.id}`);
+                if (cb) cb.checked = true;
+                this.value = '';
+                filterDomainCheckboxes('domainsCheckboxContainer', '');
+                showMessage(`✅ Домен "${name}" создан и выбран`, 'success');
+                if (document.getElementById('manage-domains-section').classList.contains('active')) {
+                    loadDomainsList();
+                }
+            } catch (err) {
+                showMessage(`❌ ${err.message}`, 'error');
+            }
+        });
+
+        // Комбо-бокс: поиск в форме редактирования
+        document.getElementById('editDomainSearchInput').addEventListener('input', function() {
+            filterDomainCheckboxes('editDomainsCheckboxContainer', this.value);
+        });
+
+        document.getElementById('editDomainSearchInput').addEventListener('keydown', async function(e) {
+            if (e.key !== 'Enter') return;
+            e.preventDefault();
+            const name = this.value.trim();
+            if (!name) return;
+
+            const exactMatch = domains.find(d => d.name.toLowerCase() === name.toLowerCase());
+            if (exactMatch) {
+                const cb = document.getElementById(`edit_domain_${exactMatch.id}`);
+                if (cb) { cb.checked = true; cb.closest('label').style.display = ''; }
+                this.value = '';
+                filterDomainCheckboxes('editDomainsCheckboxContainer', '');
+                return;
+            }
+
+            try {
+                const newDomain = await createDomainByName(name);
+                domains.push(newDomain);
+                const cardDomainIds = Array.from(document.querySelectorAll('.edit-domain-checkbox:checked')).map(c => c.value);
+                await loadDomainsForEdit(cardDomainIds);
+                const cb = document.getElementById(`edit_domain_${newDomain.id}`);
+                if (cb) cb.checked = true;
+                this.value = '';
+                filterDomainCheckboxes('editDomainsCheckboxContainer', '');
+                showMessage(`✅ Домен "${name}" создан и выбран`, 'success');
+            } catch (err) {
+                showMessage(`❌ ${err.message}`, 'error');
+            }
+        });
+
+
+        // Превью thumbnail
+        document.getElementById('thumbnail').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('thumbnailPreview');
+                    const previewImage = document.getElementById('previewThumbnail');
+                    previewImage.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                document.getElementById('thumbnailPreview').style.display = 'none';
+            }
+        });
+
+        // Обработка множественных изображений
+        document.getElementById('images').addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            
+            // Ограничение до 20 изображений
+            if (files.length > 20) {
+                showMessage('Можно загрузить максимум 20 изображений', 'error');
+                e.target.value = '';
+                selectedImages = [];
+                renderImagesPreview();
+                return;
+            }
+            
+            selectedImages = files;
+            renderImagesPreview();
+        });
+
+        function renderImagesPreview() {
+            const container = document.getElementById('imagesPreview');
+            container.innerHTML = '';
+            
+            if (selectedImages.length === 0) {
+                return;
+            }
+            
+            selectedImages.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const previewItem = document.createElement('div');
+                    previewItem.className = 'image-preview-item';
+                    previewItem.innerHTML = `
+                        <img src="${e.target.result}" alt="Preview ${index + 1}">
+                        <button type="button" class="remove-image" onclick="removeImage(${index})">×</button>
+                    `;
+                    container.appendChild(previewItem);
+                };
+                reader.readAsDataURL(file);
+            });
+            
+            // Обновляем счетчик
+            const counter = document.createElement('div');
+            counter.className = 'image-counter';
+            counter.textContent = `Выбрано: ${selectedImages.length} / 20`;
+            container.appendChild(counter);
+        }
+
+        function removeImage(index) {
+            selectedImages.splice(index, 1);
+            document.getElementById('images').value = '';
+            renderImagesPreview();
+        }
+
+        // Обработчик видео input
+        document.getElementById('video').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // Проверка типа файла
+                const validVideoTypes = ['video/mp4', 'video/webm', 'video/ogg', 'video/quicktime', 'video/x-msvideo'];
+                if (!validVideoTypes.includes(file.type)) {
+                    showMessage('Пожалуйста, выберите видео файл (mp4, webm, mov и др.)', 'error');
+                    e.target.value = '';
+                    selectedVideo = null;
+                    return;
+                }
+
+                // Проверка размера (макс 500MB)
+                const maxSize = 500 * 1024 * 1024;
+                if (file.size > maxSize) {
+                    showMessage('Размер видео не должен превышать 500MB', 'error');
+                    e.target.value = '';
+                    selectedVideo = null;
+                    return;
+                }
+
+                selectedVideo = file;
+                renderVideoPreview(file);
+            }
+        });
+
+        function renderVideoPreview(file) {
+            const previewDiv = document.getElementById('videoPreview');
+            const previewVideo = document.getElementById('previewVideo');
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewVideo.src = e.target.result;
+                previewDiv.style.display = '';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Обработка отправки формы cardForm
+        // button#submitButton → создание записи в таблице cards
+        document.getElementById('cardForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitButton = document.getElementById('submitButton');
+            submitButton.disabled = true;
+            submitButton.textContent = 'Загрузка...';
+
+            // 1. input#title → значение для cards.title
+            const title = document.getElementById('title').value.trim();
+            
+            // Генерируем slug из title
+            const slug = generateSlug(title);
+            
+            // АРХИВ: Опциональные поля (автор закомментирован)
+            // const authorId = document.getElementById('author').value || null;
+            const authorId = null; // Автор временно отключен
+            
+            // 2. input#thumbnail → файл для загрузки в bucket Medias
+            const thumbnailFile = document.getElementById('thumbnail').files[0];
+            
+            // 3. input#images → файлы для загрузки в bucket Medias (selectedImages уже содержит файлы)
+
+            if (!title) {
+                showMessage('Введите название проекта', 'error');
+                submitButton.disabled = false;
+                submitButton.textContent = 'Сохранить в базу данных';
+                return;
+            }
+
+            if (!thumbnailFile) {
+                showMessage('Выберите thumbnail изображение', 'error');
+                submitButton.disabled = false;
+                submitButton.textContent = 'Сохранить в базу данных';
+                return;
+            }
+
+            if (selectedImages.length === 0) {
+                showMessage('Выберите хотя бы одно изображение для галереи', 'error');
+                submitButton.disabled = false;
+                submitButton.textContent = 'Сохранить в базу данных';
+                return;
+            }
+
+            try {
+                const imageUrls = [];
+                const timestamp = Date.now();
+                let thumbnailUrl;
+                let videoUrl = null;
+
+                if (inspireR2UploadEnabled()) {
+                    thumbnailUrl = await uploadBlobToR2(thumbnailFile);
+                    for (let i = 0; i < selectedImages.length; i++) {
+                        const file = selectedImages[i];
+                        try {
+                            const publicUrl = await uploadBlobToR2(file);
+                            imageUrls.push({ url: publicUrl, name: file.name, order: i });
+                        } catch (e) {
+                            console.warn(`Ошибка загрузки изображения ${i + 1}:`, e);
+                        }
+                    }
+                    if (selectedVideo) {
+                        try {
+                            videoUrl = await uploadBlobToR2(selectedVideo);
+                        } catch (e) {
+                            console.warn('Ошибка загрузки видео:', e);
+                        }
+                    }
+                } else {
+                    const thumbnailFileName = `thumbnails/${Date.now()}_${thumbnailFile.name}`;
+                    const { error: thumbnailError } = await supabase.storage
+                        .from('Medias')
+                        .upload(thumbnailFileName, thumbnailFile);
+                    if (thumbnailError) {
+                        throw new Error(`Ошибка загрузки thumbnail: ${thumbnailError.message}`);
+                    }
+                    const { data: { publicUrl: tUrl } } = supabase.storage
+                        .from('Medias')
+                        .getPublicUrl(thumbnailFileName);
+                    thumbnailUrl = tUrl;
+
+                    for (let i = 0; i < selectedImages.length; i++) {
+                        const file = selectedImages[i];
+                        const fileName = `projects/${timestamp}_${i}_${file.name}`;
+                        const { error: uploadError } = await supabase.storage
+                            .from('Medias')
+                            .upload(fileName, file);
+                        if (uploadError) {
+                            console.warn(`Ошибка загрузки изображения ${i + 1}:`, uploadError);
+                            continue;
+                        }
+                        const { data: { publicUrl } } = supabase.storage
+                            .from('Medias')
+                            .getPublicUrl(fileName);
+                        imageUrls.push({ url: publicUrl, name: file.name, order: i });
+                    }
+
+                    if (selectedVideo) {
+                        const videoFileName = `videos/${timestamp}_${selectedVideo.name}`;
+                        const { error: videoError } = await supabase.storage
+                            .from('Medias')
+                            .upload(videoFileName, selectedVideo);
+                        if (videoError) {
+                            console.warn('Ошибка загрузки видео:', videoError);
+                        } else {
+                            const { data: { publicUrl } } = supabase.storage
+                                .from('Medias')
+                                .getPublicUrl(videoFileName);
+                            videoUrl = publicUrl;
+                        }
+                    }
+                }
+
+                if (imageUrls.length === 0) {
+                    throw new Error('Не удалось загрузить ни одного изображения');
+                }
+
+                // ШАГ 4: Получаем выбранные домены (мульти-выбор)
+                const selectedDomainIds = getSelectedDomainIds();
+
+                // ШАГ 4: создаем запись в таблице sites
+                const allScreenshots = [thumbnailUrl, ...imageUrls.map(img => img.url)];
+                const heroPosition = document.getElementById('heroPosition').value;
+
+                const insertData = {
+                    title: title,
+                    slug: slug,
+                    screenshots: allScreenshots,
+                    is_visible: true,
+                    hero_position: heroPosition
+                };
+
+                if (videoUrl) {
+                    insertData.videos = [videoUrl];
+                }
+
+                // ЛОГИКА: Обработка ограничений для hero позиций
+                if (heroPosition === 'hero-big-card' || heroPosition === 'hero-small-card') {
+                    const maxCount = heroPosition === 'hero-big-card' ? 1 : 2;
+
+                    // Получаем текущие проекты в выбранной позиции
+                    const { data: existingProjects } = await supabase
+                        .from('sites')
+                        .select('id, hero_position')
+                        .eq('hero_position', heroPosition);
+
+                    // Если превышен лимит, перемещаем старые проекты на site-card
+                    if (existingProjects && existingProjects.length >= maxCount) {
+                        const projectsToMove = existingProjects.slice(0, existingProjects.length - maxCount + 1);
+                        const idsToMove = projectsToMove.map(p => p.id);
+
+                        await supabase
+                            .from('sites')
+                            .update({ hero_position: 'site-card' })
+                            .in('id', idsToMove);
+                    }
+                }
+
+                const { data: cardData, error: cardError } = await supabase
+                    .from('sites')
+                    .insert(insertData)
+                    .select()
+                    .single();
+
+                if (cardError) {
+                    throw new Error(`Ошибка создания сайта: ${cardError.message}`);
+                }
+
+                // ШАГ 5: Сохраняем связи сайта с доменами через site_domains
+                if (selectedDomainIds.length > 0) {
+                    const siteDomains = selectedDomainIds.map(domainId => ({
+                        site_id: cardData.id,
+                        domain_id: domainId
+                    }));
+
+                    const { error: categoriesError } = await supabase
+                        .from('site_domains')
+                        .insert(siteDomains);
+
+                    if (categoriesError) {
+                        console.warn('Ошибка сохранения доменов:', categoriesError);
+                    }
+                }
+
+                showMessage(`✅ Карточка успешно загружена! Загружено ${imageUrls.length} изображений.`, 'success');
+                document.getElementById('cardForm').reset();
+                document.getElementById('thumbnailPreview').style.display = 'none';
+                document.getElementById('imagesPreview').innerHTML = '';
+                document.getElementById('videoPreview').style.display = 'none';
+                selectedImages = [];
+                selectedVideo = null;
+                
+                // Закрываем модальное окно предпросмотра, если оно открыто
+                closePreview();
+
+                // Обновляем список карточек, если открыта вкладка управления
+                if (document.getElementById('manage-cards-section').classList.contains('active')) {
+                    loadCardsList();
+                }
+
+            } catch (error) {
+                console.error('Ошибка:', error);
+                showMessage(`❌ Ошибка: ${error.message}`, 'error');
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Сохранить в базу данных';
+            }
+        });
+
+        // Показ сообщений
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'block';
+
+            if (type === 'success') {
+                setTimeout(() => {
+                    messageDiv.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        function showSectionsModalMessage(text, type) {
+            const el = document.getElementById('sectionsModalMessage');
+            if (!el) return;
+            el.textContent = text;
+            el.className = `message ${type}`;
+            el.style.display = 'block';
+            if (type === 'success') {
+                setTimeout(() => {
+                    el.style.display = 'none';
+                }, 3500);
+            }
+        }
+
+        let topToastTimer = null;
+        function showTopToast(text, type) {
+            const toast = document.getElementById('topToast');
+            if (!toast) return;
+            if (topToastTimer) clearTimeout(topToastTimer);
+
+            const isSuccess = type === 'success';
+            const isError = type === 'error';
+            toast.style.display = 'block';
+            toast.style.background = isSuccess ? 'rgba(212, 237, 218, 0.95)' : isError ? 'rgba(248, 215, 218, 0.95)' : 'rgba(240, 240, 240, 0.95)';
+            toast.style.color = isSuccess ? '#155724' : isError ? '#721c24' : '#111';
+            toast.style.border = isSuccess ? '1px solid #c3e6cb' : isError ? '1px solid #f5c6cb' : '1px solid rgba(0,0,0,0.08)';
+            toast.textContent = text;
+
+            topToastTimer = setTimeout(() => {
+                toast.style.display = 'none';
+            }, isError ? 6500 : 3500);
+        }
+
+        function visitSite(url) {
+            const u = (url || '').toString().trim();
+            if (!u) return;
+            window.open(u, '_blank', 'noopener');
+        }
+
+        // ============================================
+        // SECTIONS & MEDIA MANAGER
+        // ============================================
+
+        let sectionsState = {
+            projectId: null,
+            sections: [],
+            activeSectionId: null,
+            mediaBySection: new Map()
+        };
+
+        function escHtml(str) {
+            return (str || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/\"/g, '&quot;');
+        }
+
+        function openSectionsModal(projectId, projectTitle) {
+            // #region agent log
+            fetch('http://127.0.0.1:7314/ingest/edd8f992-1082-496c-b837-25e46330e39d',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'925d84'},body:JSON.stringify({sessionId:'925d84',runId:'run1',hypothesisId:'F',location:'admin.html:openSectionsModal',message:'openSectionsModal',data:{projectId,projectTitleLen:(projectTitle||'').length,hasSupabase:!!supabase},timestamp:Date.now()})}).catch(()=>{});
+            // #endregion
+            sectionsState.projectId = projectId;
+            sectionsState.activeSectionId = null;
+            sectionsState.sections = [];
+            sectionsState.mediaBySection = new Map();
+
+            document.getElementById('sectionsProjectId').value = projectId;
+            document.getElementById('sectionsModalTitle').textContent = `Sections & Media — ${projectTitle || ''}`;
+            document.getElementById('mediaPanelTitle').textContent = 'Media';
+            document.getElementById('mediaGrid').innerHTML = '<div class="drop-hint">Загрузка...</div>';
+            document.getElementById('sectionsListBody').innerHTML = '<div class="drop-hint">Загрузка секций...</div>';
+            document.getElementById('sectionsModal').classList.add('active');
+            loadSectionsForProject(projectId);
+        }
+
+        function closeSectionsModal() {
+            document.getElementById('sectionsModal').classList.remove('active');
+            document.getElementById('mediaUploadInput').value = '';
+        }
+
+        async function loadSectionsForProject(projectId) {
+            try {
+                const { data, error } = await supabase
+                    .from('sections')
+                    .select('*')
+                    .eq('project_id', projectId)
+                    .order('order', { ascending: true });
+
+                // #region agent log
+                fetch('http://127.0.0.1:7314/ingest/edd8f992-1082-496c-b837-25e46330e39d',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'925d84'},body:JSON.stringify({sessionId:'925d84',runId:'run1',hypothesisId:'G',location:'admin.html:loadSectionsForProject',message:'loadSectionsForProject result',data:{projectId,hasError:!!error,errorMessage:error?.message,errorCode:error?.code,count:(data||[]).length},timestamp:Date.now()})}).catch(()=>{});
+                // #endregion
+
+                if (error) throw error;
+                sectionsState.sections = data || [];
+
+                if (sectionsState.sections.length === 0) {
+                    const { data: created, error: createErr } = await supabase
+                        .from('sections')
+                        .insert({ project_id: projectId, title: 'General', order: 0 })
+                        .select()
+                        .single();
+                    if (createErr) throw createErr;
+                    sectionsState.sections = [created];
+                }
+
+                renderSectionsList();
+                if (sectionsState.sections[0]) setActiveSection(sectionsState.sections[0].id);
+            } catch (e) {
+                console.error(e);
+                document.getElementById('sectionsListBody').innerHTML = `<div class="drop-hint">Ошибка загрузки секций: ${e.message}</div>`;
+            }
+        }
+
+        function renderSectionsList() {
+            const body = document.getElementById('sectionsListBody');
+            if (!sectionsState.sections.length) {
+                body.innerHTML = '<div class="drop-hint">Нет секций.</div>';
+                return;
+            }
+
+            body.innerHTML = '';
+            sectionsState.sections
+                .slice()
+                .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+                .forEach(sec => {
+                    const row = document.createElement('div');
+                    row.className = 'section-row' + (sectionsState.activeSectionId === sec.id ? ' active' : '');
+                    row.setAttribute('data-id', sec.id);
+                    row.draggable = true;
+
+                    row.innerHTML = `
+                        <div class="section-drag" title="Drag">⋮⋮</div>
+                        <div class="section-title" title="${escHtml(sec.title)}">${escHtml(sec.title)}</div>
+                        <div class="section-actions">
+                            <button class="icon-btn" type="button" title="Rename" onclick="event.stopPropagation(); renameSectionPrompt('${sec.id}')">✎</button>
+                            <button class="icon-btn" type="button" title="Delete" onclick="event.stopPropagation(); deleteSection('${sec.id}')">🗑</button>
+                        </div>
+                    `;
+
+                    row.addEventListener('click', () => setActiveSection(sec.id));
+
+                    row.addEventListener('dragstart', (ev) => {
+                        ev.dataTransfer.setData('text/plain', sec.id);
+                        ev.dataTransfer.effectAllowed = 'move';
+                    });
+                    row.addEventListener('dragover', (ev) => {
+                        ev.preventDefault();
+                        ev.dataTransfer.dropEffect = 'move';
+                    });
+                    row.addEventListener('drop', (ev) => {
+                        ev.preventDefault();
+                        const fromId = ev.dataTransfer.getData('text/plain');
+                        const toId = sec.id;
+                        if (!fromId || fromId === toId) return;
+                        reorderSections(fromId, toId);
+                    });
+
+                    body.appendChild(row);
+                });
+        }
+
+        async function addSectionPrompt() {
+            const title = prompt('Название секции (например Portfolio):');
+            if (!title) return;
+            try {
+                const nextOrder = sectionsState.sections.length
+                    ? Math.max(...sectionsState.sections.map(s => s.order ?? 0)) + 1
+                    : 0;
+                const { data, error } = await supabase
+                    .from('sections')
+                    .insert({ project_id: sectionsState.projectId, title, order: nextOrder })
+                    .select()
+                    .single();
+                if (error) throw error;
+                sectionsState.sections.push(data);
+                renderSectionsList();
+            } catch (e) {
+                showMessage(`❌ Ошибка: ${e.message}`, 'error');
+            }
+        }
+
+        async function renameSectionPrompt(sectionId) {
+            const sec = sectionsState.sections.find(s => s.id === sectionId);
+            if (!sec) return;
+            const title = prompt('Новое название секции:', sec.title || '');
+            if (!title || title === sec.title) return;
+            try {
+                const { error } = await supabase
+                    .from('sections')
+                    .update({ title })
+                    .eq('id', sectionId);
+                if (error) throw error;
+                sec.title = title;
+                renderSectionsList();
+                if (sectionsState.activeSectionId === sectionId) {
+                    document.getElementById('mediaPanelTitle').textContent = `Media — ${title}`;
+                }
+            } catch (e) {
+                showMessage(`❌ Ошибка: ${e.message}`, 'error');
+            }
+        }
+
+        async function deleteSection(sectionId) {
+            const sec = sectionsState.sections.find(s => s.id === sectionId);
+            if (!sec) return;
+            if (!confirm(`Удалить секцию "${sec.title}"? Медиа внутри тоже удалится.`)) return;
+            try {
+                const { error } = await supabase
+                    .from('sections')
+                    .delete()
+                    .eq('id', sectionId);
+                if (error) throw error;
+                sectionsState.sections = sectionsState.sections.filter(s => s.id !== sectionId);
+                sectionsState.mediaBySection.delete(sectionId);
+                if (sectionsState.activeSectionId === sectionId) {
+                    sectionsState.activeSectionId = sectionsState.sections[0]?.id || null;
+                }
+                renderSectionsList();
+                if (sectionsState.activeSectionId) setActiveSection(sectionsState.activeSectionId);
+                else document.getElementById('mediaGrid').innerHTML = '<div class="drop-hint">Нет секций.</div>';
+            } catch (e) {
+                showMessage(`❌ Ошибка: ${e.message}`, 'error');
+            }
+        }
+
+        async function reorderSections(fromId, toId) {
+            const sorted = sectionsState.sections
+                .slice()
+                .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+            const fromIdx = sorted.findIndex(s => s.id === fromId);
+            const toIdx = sorted.findIndex(s => s.id === toId);
+            if (fromIdx === -1 || toIdx === -1) return;
+
+            const [moved] = sorted.splice(fromIdx, 1);
+            sorted.splice(toIdx, 0, moved);
+
+            const updates = sorted.map((s, idx) => ({ id: s.id, order: idx }));
+            try {
+                for (const u of updates) {
+                    const sec = sectionsState.sections.find(x => x.id === u.id);
+                    if (sec) sec.order = u.order;
+                }
+                renderSectionsList();
+
+                for (const u of updates) {
+                    const { error } = await supabase.from('sections').update({ order: u.order }).eq('id', u.id);
+                    if (error) throw error;
+                }
+            } catch (e) {
+                showMessage(`❌ Ошибка сортировки секций: ${e.message}`, 'error');
+                loadSectionsForProject(sectionsState.projectId);
+            }
+        }
+
+        async function setActiveSection(sectionId) {
+            sectionsState.activeSectionId = sectionId;
+            const sec = sectionsState.sections.find(s => s.id === sectionId);
+            document.getElementById('mediaPanelTitle').textContent = `Media — ${sec?.title || ''}`;
+            renderSectionsList();
+
+            if (sectionsState.mediaBySection.has(sectionId)) {
+                renderMediaGrid(sectionId);
+                return;
+            }
+
+            document.getElementById('mediaGrid').innerHTML = '<div class="drop-hint">Загрузка медиа...</div>';
+            try {
+                const { data, error } = await supabase
+                    .from('media')
+                    .select('*')
+                    .eq('section_id', sectionId)
+                    .order('order', { ascending: true });
+                if (error) throw error;
+                sectionsState.mediaBySection.set(sectionId, data || []);
+                renderMediaGrid(sectionId);
+            } catch (e) {
+                document.getElementById('mediaGrid').innerHTML = `<div class="drop-hint">Ошибка загрузки медиа: ${e.message}</div>`;
+            }
+        }
+
+        function renderMediaGrid(sectionId) {
+            const grid = document.getElementById('mediaGrid');
+            const sec = sectionsState.sections.find(s => s.id === sectionId);
+            const items = (sectionsState.mediaBySection.get(sectionId) || [])
+                .slice()
+                .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+
+            if (!items.length) {
+                grid.innerHTML = '<div class="drop-hint">Пока нет медиа. Загрузите файлы сверху.</div>';
+                return;
+            }
+
+            grid.innerHTML = '';
+            items.forEach(m => {
+                const el = document.createElement('div');
+                el.className = 'media-item';
+                el.draggable = true;
+                el.setAttribute('data-id', m.id);
+
+                const isVideo = m.type === 'video';
+                const thumb = m.thumbnail_url || m.url;
+                const isCover = sec?.cover_media_id && sec.cover_media_id === m.id;
+
+                el.innerHTML = `
+                    ${isVideo
+                        ? `<img src="${escHtml(thumb)}" alt="video" />`
+                        : `<img src="${escHtml(m.url)}" alt="image" />`
+                    }
+                    <div class="media-item-badge">${isVideo ? 'VIDEO' : 'IMAGE'}</div>
+                    <div class="media-item-actions">
+                        <button class="icon-btn" type="button" title="Set cover" onclick="setSectionCover('${sectionId}','${m.id}')">★</button>
+                        <button class="icon-btn" type="button" title="Delete" onclick="deleteMedia('${sectionId}','${m.id}')">🗑</button>
+                    </div>
+                    ${isCover ? '<div class="cover-star">COVER</div>' : ''}
+                `;
+
+                el.addEventListener('dragstart', (ev) => {
+                    ev.dataTransfer.setData('text/plain', m.id);
+                    ev.dataTransfer.effectAllowed = 'move';
+                });
+                el.addEventListener('dragover', (ev) => {
+                    ev.preventDefault();
+                    ev.dataTransfer.dropEffect = 'move';
+                });
+                el.addEventListener('drop', (ev) => {
+                    ev.preventDefault();
+                    const fromId = ev.dataTransfer.getData('text/plain');
+                    const toId = m.id;
+                    if (!fromId || fromId === toId) return;
+                    reorderMedia(sectionId, fromId, toId);
+                });
+
+                grid.appendChild(el);
+            });
+        }
+
+        async function uploadMediaToActiveSection() {
+            const sectionId = sectionsState.activeSectionId;
+            if (!sectionId) {
+                showSectionsModalMessage('Выберите секцию слева', 'error');
+                return;
+            }
+
+            const input = document.getElementById('mediaUploadInput');
+            const files = Array.from(input.files || []);
+            if (!files.length) {
+                showSectionsModalMessage('Выберите файлы для загрузки', 'error');
+                return;
+            }
+
+            const uploadBtn = document.getElementById('mediaUploadButton');
+            if (uploadBtn) {
+                uploadBtn.disabled = true;
+                uploadBtn.textContent = 'Uploading...';
+            }
+
+            // #region agent log
+            fetch('http://127.0.0.1:7314/ingest/edd8f992-1082-496c-b837-25e46330e39d',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'925d84'},body:JSON.stringify({sessionId:'925d84',runId:'run1',hypothesisId:'H',location:'admin.html:uploadMediaToActiveSection',message:'uploadMediaToActiveSection start',data:{projectId:sectionsState.projectId,sectionId,filesCount:files.length,types:files.map(f=>(f.type||'').split('/')[0]).slice(0,5)},timestamp:Date.now()})}).catch(()=>{});
+            // #endregion
+
+            const projectId = sectionsState.projectId;
+            const current = sectionsState.mediaBySection.get(sectionId) || [];
+            let nextOrder = current.length ? Math.max(...current.map(m => m.order ?? 0)) + 1 : 0;
+
+            try {
+                for (const file of files) {
+                    if (inspireR2UploadEnabled()) {
+                        const inserted = await uploadSectionMediaToR2(file, {
+                            sectionId,
+                            projectId,
+                            order: nextOrder++
+                        });
+                        current.push(inserted);
+                    } else {
+                        const isVideo = (file.type || '').startsWith('video/');
+                        const type = isVideo ? 'video' : 'image';
+                        const ts = Date.now();
+                        const safeName = (file.name || 'file').replace(/[^\w.\-]+/g, '_');
+                        const path = `projects/${projectId}/${sectionId}/${ts}_${safeName}`;
+
+                        const { error: upErr } = await supabase.storage.from('Medias').upload(path, file);
+                        if (upErr) throw upErr;
+                        const { data: { publicUrl } } = supabase.storage.from('Medias').getPublicUrl(path);
+
+                        // #region agent log
+                        fetch('http://127.0.0.1:7314/ingest/edd8f992-1082-496c-b837-25e46330e39d',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'925d84'},body:JSON.stringify({sessionId:'925d84',runId:'run1',hypothesisId:'I',location:'admin.html:uploadMediaToActiveSection',message:'storage upload ok',data:{sectionId,kind:type,publicUrlPrefix:(publicUrl||'').slice(0,30)},timestamp:Date.now()})}).catch(()=>{});
+                        // #endregion
+
+                        const payload = {
+                            section_id: sectionId,
+                            type,
+                            url: publicUrl,
+                            thumbnail_url: null,
+                            bytes: typeof file.size === 'number' ? file.size : null,
+                            order: nextOrder++
+                        };
+
+                        const { data: inserted, error: insErr } = await supabase
+                            .from('media')
+                            .insert(payload)
+                            .select()
+                            .single();
+                        if (insErr) throw insErr;
+
+                        current.push(inserted);
+                    }
+                }
+
+                sectionsState.mediaBySection.set(sectionId, current);
+                input.value = '';
+                renderMediaGrid(sectionId);
+                showSectionsModalMessage('✅ Медиа загружено', 'success');
+            } catch (e) {
+                console.error(e);
+                // #region agent log
+                fetch('http://127.0.0.1:7314/ingest/edd8f992-1082-496c-b837-25e46330e39d',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'925d84'},body:JSON.stringify({sessionId:'925d84',runId:'run1',hypothesisId:'J',location:'admin.html:uploadMediaToActiveSection',message:'upload failed',data:{errorMessage:e?.message,name:e?.name},timestamp:Date.now()})}).catch(()=>{});
+                // #endregion
+                showSectionsModalMessage(`❌ Ошибка загрузки: ${e.message}`, 'error');
+            } finally {
+                if (uploadBtn) {
+                    uploadBtn.disabled = false;
+                    uploadBtn.textContent = 'Upload';
+                }
+            }
+        }
+
+        async function deleteMedia(sectionId, mediaId) {
+            if (!confirm('Удалить медиа?')) return;
+            try {
+                const { error } = await supabase.from('media').delete().eq('id', mediaId);
+                if (error) throw error;
+
+                const arr = (sectionsState.mediaBySection.get(sectionId) || []).filter(m => m.id !== mediaId);
+                sectionsState.mediaBySection.set(sectionId, arr);
+
+                const sec = sectionsState.sections.find(s => s.id === sectionId);
+                if (sec?.cover_media_id === mediaId) {
+                    await supabase.from('sections').update({ cover_media_id: null }).eq('id', sectionId);
+                    sec.cover_media_id = null;
+                }
+
+                renderMediaGrid(sectionId);
+            } catch (e) {
+                showMessage(`❌ Ошибка удаления: ${e.message}`, 'error');
+            }
+        }
+
+        async function setSectionCover(sectionId, mediaId) {
+            try {
+                const { error } = await supabase.from('sections').update({ cover_media_id: mediaId }).eq('id', sectionId);
+                if (error) throw error;
+                const sec = sectionsState.sections.find(s => s.id === sectionId);
+                if (sec) sec.cover_media_id = mediaId;
+                renderMediaGrid(sectionId);
+            } catch (e) {
+                showMessage(`❌ Ошибка установки cover: ${e.message}`, 'error');
+            }
+        }
+
+        async function reorderMedia(sectionId, fromId, toId) {
+            const items = (sectionsState.mediaBySection.get(sectionId) || [])
+                .slice()
+                .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+            const fromIdx = items.findIndex(m => m.id === fromId);
+            const toIdx = items.findIndex(m => m.id === toId);
+            if (fromIdx === -1 || toIdx === -1) return;
+            const [moved] = items.splice(fromIdx, 1);
+            items.splice(toIdx, 0, moved);
+
+            const updates = items.map((m, idx) => ({ id: m.id, order: idx }));
+
+            try {
+                const current = sectionsState.mediaBySection.get(sectionId) || [];
+                for (const u of updates) {
+                    const mm = current.find(x => x.id === u.id);
+                    if (mm) mm.order = u.order;
+                }
+                sectionsState.mediaBySection.set(sectionId, current);
+                renderMediaGrid(sectionId);
+
+                for (const u of updates) {
+                    const { error } = await supabase.from('media').update({ order: u.order }).eq('id', u.id);
+                    if (error) throw error;
+                }
+            } catch (e) {
+                showMessage(`❌ Ошибка сортировки медиа: ${e.message}`, 'error');
+                sectionsState.mediaBySection.delete(sectionId);
+                setActiveSection(sectionId);
+            }
+        }
+
+        // Функция предпросмотра данных
+        function showPreview() {
+            const title = document.getElementById('title').value.trim();
+            // АРХИВ: const authorId = document.getElementById('author').value;
+            const selectedDomainIds = getSelectedDomainIds();
+
+            // Валидация
+            if (!title) {
+                showMessage('Введите название проекта для предпросмотра', 'error');
+                return;
+            }
+
+            // АРХИВ: Автор теперь необязателен (закомментировано)
+            // const author = authorId ? authors.find(a => a.id === authorId) : null;
+            // const authorName = author ? author.name : 'Не выбран';
+            
+            // Получаем названия выбранных доменов
+            const selectedDomains = selectedDomainIds
+                .map(id => {
+                    const domain = domains.find(d => d.id === id);
+                    return domain ? domain.name : null;
+                })
+                .filter(name => name !== null);
+            const domainNames = selectedDomains.length > 0 ? selectedDomains.join(', ') : 'Не выбраны';
+
+            // Формируем контент предпросмотра
+            let previewHtml = `
+                <div class="preview-section">
+                    <h3>Название проекта</h3>
+                    <p><strong>${title}</strong></p>
+                </div>
+            `;
+
+            // АРХИВ: Секция автора в предпросмотре (закомментировано)
+            /*
+            previewHtml += `
+                <div class="preview-section">
+                    <h3>Автор</h3>
+                    <p>${authorName}</p>
+                </div>
+            `;
+            */
+
+            previewHtml += `
+                <div class="preview-section">
+                    <h3>Домены</h3>
+                    <p>${domainNames}</p>
+                </div>
+            `;
+
+            // Thumbnail
+            const thumbnailFile = document.getElementById('thumbnail').files[0];
+            if (thumbnailFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewHtml += `
+                        <div class="preview-section">
+                            <h3>Thumbnail изображение</h3>
+                            <img src="${e.target.result}" alt="Thumbnail" style="max-width: 300px; border-radius: 8px; margin-top: 12px;">
+                        </div>
+                    `;
+                    
+                    // Изображения галереи
+                    if (selectedImages.length > 0) {
+                        previewHtml += `
+                            <div class="preview-section">
+                                <h3>Изображения галереи (${selectedImages.length})</h3>
+                                <div class="preview-images" id="previewGalleryImages"></div>
+                            </div>
+                        `;
+                    }
+                    
+                    document.getElementById('previewContent').innerHTML = previewHtml;
+                    
+                    // Загружаем изображения галереи
+                    if (selectedImages.length > 0) {
+                        const galleryContainer = document.getElementById('previewGalleryImages');
+                        selectedImages.forEach((file, index) => {
+                            const reader = new FileReader();
+                            reader.onload = function(e) {
+                                const img = document.createElement('img');
+                                img.src = e.target.result;
+                                img.alt = `Изображение ${index + 1}`;
+                                galleryContainer.appendChild(img);
+                            };
+                            reader.readAsDataURL(file);
+                        });
+                    }
+                    
+                    document.getElementById('previewModal').style.display = 'block';
+                };
+                reader.readAsDataURL(thumbnailFile);
+            } else {
+                previewHtml += `
+                    <div class="preview-section">
+                        <h3>Thumbnail изображение</h3>
+                        <p style="color: #999;">Не выбрано</p>
+                    </div>
+                `;
+                
+                if (selectedImages.length > 0) {
+                    previewHtml += `
+                        <div class="preview-section">
+                            <h3>Изображения галереи (${selectedImages.length})</h3>
+                            <div class="preview-images" id="previewGalleryImages"></div>
+                        </div>
+                    `;
+                }
+                
+                document.getElementById('previewContent').innerHTML = previewHtml;
+                
+                // Загружаем изображения галереи
+                if (selectedImages.length > 0) {
+                    const galleryContainer = document.getElementById('previewGalleryImages');
+                    selectedImages.forEach((file, index) => {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            const img = document.createElement('img');
+                            img.src = e.target.result;
+                            img.alt = `Изображение ${index + 1}`;
+                            galleryContainer.appendChild(img);
+                        };
+                        reader.readAsDataURL(file);
+                    });
+                }
+                
+                document.getElementById('previewModal').style.display = 'block';
+            }
+        }
+
+        // Закрыть предпросмотр
+        function closePreview() {
+            document.getElementById('previewModal').style.display = 'none';
+        }
+
+        // Сохранить из предпросмотра
+        function saveFromPreview() {
+            closePreview();
+            // Триггерим отправку формы
+            document.getElementById('cardForm').dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+        }
+
+        // Обработчик кнопки предпросмотра
+        document.getElementById('previewButton').addEventListener('click', function(e) {
+            e.preventDefault();
+            showPreview();
+        });
+
+        // Закрытие модального окна по клику вне его
+        document.getElementById('previewModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePreview();
+            }
+        });
+
+        // ============================================
+        // УПРАВЛЕНИЕ ДАННЫМИ
+        // ============================================
+
+        // Переключение между табами
+        document.querySelectorAll('.admin-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const tabName = this.getAttribute('data-tab');
+                
+                // Обновляем активные табы
+                document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Показываем нужную секцию
+                document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+                document.getElementById(`${tabName}-section`).classList.add('active');
+                
+                // Загружаем данные при переключении
+                if (tabName === 'manage-cards') {
+                    loadCardsList();
+                } else if (tabName === 'manage-domains') {
+                    loadDomainsList();
+                }
+            });
+        });
+
+        // Загрузка списка карточек для управления
+        async function loadCardsList() {
+            const container = document.getElementById('cardsList');
+            container.innerHTML = '<div class="loading-spinner">Загрузка карточек...</div>';
+            
+            try {
+                const { data: cards, error } = await supabase
+                    .from('sites')
+                    .select(`
+                        *,
+                        site_domains (
+                            domains (
+                                id,
+                                name
+                            )
+                        )
+                    `)
+                    .order('created_at', { ascending: false });
+
+                if (error) {
+                    throw error;
+                }
+
+                if (!cards || cards.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <h3>Карточки не найдены</h3>
+                            <p>Создайте первую карточку в разделе "Создание"</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = '<div class="cards-list"></div>';
+                const list = container.querySelector('.cards-list');
+
+                // Prefetch per-project sections/media stats (counts + bytes when available)
+                const statsByProjectId = await getProjectsMediaStats(cards.map(c => c.id));
+
+                cards.forEach(card => {
+                    // АРХИВ: const authorName = card.authors ? card.authors.name : 'Не указан';
+                    // Получаем все домены карточки
+                    const domains = card.site_domains?.map(sd => sd.domains).filter(c => c) || [];
+                    const domainNames = domains.length > 0 
+                        ? domains.map(d => d.name).join(', ') 
+                        : 'Не указаны';
+                    const thumbnailUrl = (Array.isArray(card.screenshots) ? card.screenshots[0] : null) || card.thumbnail_url || card.image_url || '';
+                    const stats = statsByProjectId.get(card.id) || { sections: 0, mediaCount: 0, bytes: null, bytesKnown: false };
+                    const sizeLabel = stats.bytesKnown ? formatBytes(stats.bytes || 0) : '—';
+                    const siteUrl = (card.url || '').trim();
+                    const hasUrl = !!siteUrl;
+
+                    const cardElement = document.createElement('div');
+                    cardElement.className = 'card-item';
+                    cardElement.innerHTML = `
+                        <img src="${thumbnailUrl}" alt="${card.title}" class="card-item-image" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22150%22 height=%22100%22%3E%3Crect fill=%22%23e0e0e0%22 width=%22150%22 height=%22100%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23999%22%3EНет изображения%3C/text%3E%3C/svg%3E'">
+                        <div class="card-item-content">
+                            <div class="card-item-title">${card.title}</div>
+                            <div class="card-item-meta">
+                                Домены: ${domainNames}
+                                <div class="card-item-submeta">
+                                    Sections: ${stats.sections} · Media: ${stats.mediaCount} · Size: ${sizeLabel}
+                                </div>
+                            </div>
+                            <div class="card-item-actions">
+                                <button class="btn-edit" onclick="editCard('${card.id}')">Редактировать</button>
+                                <button class="btn-link" ${hasUrl ? '' : 'disabled'} title="${hasUrl ? escHtml(siteUrl) : 'URL не задан в sites.url'}" onclick='${hasUrl ? `visitSite(${JSON.stringify(siteUrl)})` : 'return false;'}'>Visit</button>
+                                <button class="btn-secondary" onclick='openSectionsModal("${card.id}", ${JSON.stringify(card.title || '')})'>Sections & Media</button>
+                                <button class="btn-delete" onclick="deleteCard('${card.id}', '${card.title.replace(/'/g, "\\'")}')">Удалить</button>
+                            </div>
+                        </div>
+                    `;
+                    list.appendChild(cardElement);
+                });
+
+            } catch (error) {
+                console.error('Ошибка загрузки карточек:', error);
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>Ошибка загрузки карточек</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        function formatBytes(bytes) {
+            const n = Number(bytes || 0);
+            if (!Number.isFinite(n) || n <= 0) return '0 B';
+            const units = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.min(units.length - 1, Math.floor(Math.log(n) / Math.log(1024)));
+            const value = n / Math.pow(1024, i);
+            return `${value.toFixed(value >= 10 || i === 0 ? 0 : 1)} ${units[i]}`;
+        }
+
+        async function getProjectsMediaStats(projectIds) {
+            const map = new Map();
+            projectIds.forEach(id => map.set(id, { sections: 0, mediaCount: 0, bytes: 0, bytesKnown: true }));
+            if (!projectIds.length) return map;
+
+            // sections for these projects
+            const { data: sections, error: secErr } = await supabase
+                .from('sections')
+                .select('id, project_id')
+                .in('project_id', projectIds);
+
+            if (secErr) {
+                console.warn('Stats: sections query failed', secErr);
+                // mark unknown
+                projectIds.forEach(id => map.set(id, { sections: 0, mediaCount: 0, bytes: null, bytesKnown: false }));
+                return map;
+            }
+
+            const sectionIds = (sections || []).map(s => s.id);
+            const projectBySectionId = new Map((sections || []).map(s => [s.id, s.project_id]));
+
+            // update sections count
+            (sections || []).forEach(s => {
+                const cur = map.get(s.project_id) || { sections: 0, mediaCount: 0, bytes: 0, bytesKnown: true };
+                cur.sections += 1;
+                map.set(s.project_id, cur);
+            });
+
+            if (!sectionIds.length) {
+                // projects exist but no sections
+                projectIds.forEach(id => {
+                    const cur = map.get(id) || { sections: 0, mediaCount: 0, bytes: 0, bytesKnown: true };
+                    cur.bytesKnown = true;
+                    map.set(id, cur);
+                });
+                return map;
+            }
+
+            // media: try to read bytes; if column not present, fallback to counts only
+            let media = [];
+            try {
+                const { data: m, error: mErr } = await supabase
+                    .from('media')
+                    .select('section_id, bytes')
+                    .in('section_id', sectionIds);
+                if (mErr) throw mErr;
+                media = m || [];
+            } catch (e) {
+                console.warn('Stats: media bytes query failed, falling back to count-only', e);
+                const { data: m2, error: m2Err } = await supabase
+                    .from('media')
+                    .select('section_id')
+                    .in('section_id', sectionIds);
+                if (m2Err) {
+                    console.warn('Stats: media count query failed', m2Err);
+                    projectIds.forEach(id => map.set(id, { sections: map.get(id)?.sections || 0, mediaCount: 0, bytes: null, bytesKnown: false }));
+                    return map;
+                }
+                media = (m2 || []).map(x => ({ section_id: x.section_id, bytes: null }));
+                // mark bytes unknown for all
+                projectIds.forEach(id => {
+                    const cur = map.get(id) || { sections: 0, mediaCount: 0, bytes: 0, bytesKnown: true };
+                    cur.bytesKnown = false;
+                    cur.bytes = null;
+                    map.set(id, cur);
+                });
+            }
+
+            // accumulate
+            media.forEach(m => {
+                const projectId = projectBySectionId.get(m.section_id);
+                if (!projectId) return;
+                const cur = map.get(projectId) || { sections: 0, mediaCount: 0, bytes: 0, bytesKnown: true };
+                cur.mediaCount += 1;
+                if (cur.bytesKnown && typeof m.bytes === 'number') cur.bytes += m.bytes;
+                map.set(projectId, cur);
+            });
+
+            return map;
+        }
+
+        // Cache for edit modal (avoid relying on optional columns)
+        let editCardState = {
+            id: null,
+            screenshots: [],
+            videos: []
+        };
+        let editSelectedLibraryThumbnailUrl = '';
+        let editSelectedLibraryVideoUrl = '';
+
+        async function loadThumbnailLibraryForEdit(projectId, currentThumbUrl) {
+            const select = document.getElementById('editThumbnailLibrarySelect');
+            const hint = document.getElementById('editThumbnailLibraryHint');
+            const grid = document.getElementById('editThumbnailLibraryGrid');
+            if (!select) return;
+
+            editSelectedLibraryThumbnailUrl = '';
+            select.innerHTML = `<option value="">— Не выбрано —</option>`;
+            if (grid) { grid.innerHTML = ''; grid.style.display = 'none'; }
+            if (hint) hint.textContent = 'Загрузка изображений из Sections & Media...';
+
+            try {
+                const { data: sections, error: secErr } = await supabase
+                    .from('sections')
+                    .select('id')
+                    .eq('project_id', projectId);
+                if (secErr) throw secErr;
+
+                const sectionIds = (sections || []).map(s => s.id).filter(Boolean);
+                if (!sectionIds.length) {
+                    if (hint) hint.textContent = 'В Sections & Media пока нет секций/изображений для этого проекта.';
+                    return;
+                }
+
+                const { data: media, error: mErr } = await supabase
+                    .from('media')
+                    .select('id, url, created_at, order')
+                    .in('section_id', sectionIds)
+                    .eq('type', 'image')
+                    .order('created_at', { ascending: false });
+                if (mErr) throw mErr;
+
+                const urls = [];
+                const seen = new Set();
+                (media || []).forEach(m => {
+                    const u = (m?.url || '').toString().trim();
+                    if (!u || seen.has(u)) return;
+                    seen.add(u);
+                    urls.push(u);
+                });
+
+                if (!urls.length) {
+                    if (hint) hint.textContent = 'В Sections & Media нет изображений для этого проекта.';
+                    return;
+                }
+
+                urls.forEach((u, idx) => {
+                    const opt = document.createElement('option');
+                    opt.value = u;
+                    const short = u.length > 64 ? (u.slice(0, 48) + '…' + u.slice(-12)) : u;
+                    opt.textContent = `Картинка ${idx + 1}: ${short}`;
+                    if (currentThumbUrl && u === currentThumbUrl) opt.textContent += ' (текущий)';
+                    select.appendChild(opt);
+                });
+
+                if (grid) {
+                    grid.style.display = '';
+                    grid.innerHTML = '';
+                    urls.forEach((u) => {
+                        const btn = document.createElement('button');
+                        btn.type = 'button';
+                        btn.className = 'thumb-library-item' + ((select.value || '') === u ? ' selected' : '');
+                        btn.title = u;
+                        btn.innerHTML = `<img src="${escHtml(u)}" alt="" loading="lazy" />`;
+                        btn.addEventListener('click', () => {
+                            select.value = u;
+                            select.dispatchEvent(new Event('change', { bubbles: true }));
+                            // mark selected
+                            Array.from(grid.querySelectorAll('.thumb-library-item')).forEach(x => x.classList.remove('selected'));
+                            btn.classList.add('selected');
+                        });
+                        grid.appendChild(btn);
+                    });
+                }
+
+                if (hint) hint.textContent = 'Выбери картинку — она будет установлена как thumbnail без загрузки.';
+            } catch (e) {
+                console.warn('loadThumbnailLibraryForEdit failed', e);
+                if (hint) hint.textContent = `Не удалось загрузить библиотеку изображений: ${e?.message || e}`;
+            }
+        }
+
+        function initEditThumbnailLibraryUI() {
+            const select = document.getElementById('editThumbnailLibrarySelect');
+            if (!select || select.dataset.init === '1') return;
+            select.dataset.init = '1';
+
+            select.addEventListener('change', () => {
+                editSelectedLibraryThumbnailUrl = (select.value || '').toString().trim();
+                const fileInput = document.getElementById('editThumbnail');
+                if (fileInput && editSelectedLibraryThumbnailUrl) {
+                    fileInput.value = '';
+                }
+
+                if (editSelectedLibraryThumbnailUrl) {
+                    const img = document.getElementById('editThumbnailImg');
+                    const preview = document.getElementById('editThumbnailPreview');
+                    if (img) img.src = editSelectedLibraryThumbnailUrl;
+                    if (preview) preview.style.display = 'block';
+                } else {
+                    // restore current thumbnail preview from state
+                    const img = document.getElementById('editThumbnailImg');
+                    const preview = document.getElementById('editThumbnailPreview');
+                    const cur = editCardState.screenshots?.[0] || '';
+                    if (img && cur) img.src = cur;
+                    if (preview) preview.style.display = cur ? 'block' : 'none';
+                }
+            });
+        }
+
+        async function loadVideoLibraryForEdit(projectId, currentVideoUrl) {
+            const select = document.getElementById('editVideoLibrarySelect');
+            const hint = document.getElementById('editVideoLibraryHint');
+            if (!select) return;
+
+            editSelectedLibraryVideoUrl = '';
+            select.innerHTML = `<option value="">— Не выбрано —</option>`;
+            if (hint) hint.textContent = 'Загрузка видео из Sections & Media...';
+
+            try {
+                // 1) get section ids for this project
+                const { data: sections, error: secErr } = await supabase
+                    .from('sections')
+                    .select('id')
+                    .eq('project_id', projectId);
+                if (secErr) throw secErr;
+
+                const sectionIds = (sections || []).map(s => s.id).filter(Boolean);
+                if (!sectionIds.length) {
+                    if (hint) hint.textContent = 'В Sections & Media пока нет секций/видео для этого проекта.';
+                    return;
+                }
+
+                // 2) get videos in these sections
+                const { data: media, error: mErr } = await supabase
+                    .from('media')
+                    .select('id, url, created_at, order')
+                    .in('section_id', sectionIds)
+                    .eq('type', 'video')
+                    .order('created_at', { ascending: false });
+                if (mErr) throw mErr;
+
+                const urls = [];
+                const seen = new Set();
+                (media || []).forEach(m => {
+                    const u = (m?.url || '').toString().trim();
+                    if (!u || seen.has(u)) return;
+                    seen.add(u);
+                    urls.push(u);
+                });
+
+                if (!urls.length) {
+                    if (hint) hint.textContent = 'В Sections & Media нет видео для этого проекта.';
+                    return;
+                }
+
+                urls.forEach((u, idx) => {
+                    const opt = document.createElement('option');
+                    opt.value = u;
+                    const short = u.length > 64 ? (u.slice(0, 48) + '…' + u.slice(-12)) : u;
+                    opt.textContent = `Видео ${idx + 1}: ${short}`;
+                    if (currentVideoUrl && u === currentVideoUrl) opt.textContent += ' (текущее)';
+                    select.appendChild(opt);
+                });
+
+                if (hint) hint.textContent = 'Выбери видео из списка — оно будет установлено для карточки без загрузки.';
+            } catch (e) {
+                console.warn('loadVideoLibraryForEdit failed', e);
+                if (hint) hint.textContent = `Не удалось загрузить библиотеку видео: ${e?.message || e}`;
+            }
+        }
+
+        function initEditVideoLibraryUI() {
+            const select = document.getElementById('editVideoLibrarySelect');
+            if (!select || select.dataset.init === '1') return;
+            select.dataset.init = '1';
+
+            select.addEventListener('change', () => {
+                editSelectedLibraryVideoUrl = (select.value || '').toString().trim();
+                const fileInput = document.getElementById('editVideo');
+                if (fileInput && editSelectedLibraryVideoUrl) {
+                    // prevent ambiguous "file + library" choice
+                    fileInput.value = '';
+                }
+
+                const videoHint = document.getElementById('editVideoHint');
+                if (videoHint) {
+                    videoHint.textContent = editSelectedLibraryVideoUrl
+                        ? `Выбрано из Sections & Media: ${editSelectedLibraryVideoUrl}`
+                        : (editCardState.videos?.[0] ? `Видео задано: ${editCardState.videos[0]}` : 'Нет видео');
+                }
+            });
+        }
+
+        // Редактирование карточки
+        async function editCard(cardId) {
+            try {
+                // Загружаем данные карточки с доменами через site_domains
+                const { data: card, error } = await supabase
+                    .from('sites')
+                    .select(`
+                        *,
+                        site_domains (
+                            domain_id,
+                            domains (
+                                id,
+                                name
+                            )
+                        )
+                    `)
+                    .eq('id', cardId)
+                    .single();
+
+                if (error) throw error;
+
+                editCardState = {
+                    id: card.id,
+                    screenshots: Array.isArray(card.screenshots) ? card.screenshots : [],
+                    videos: Array.isArray(card.videos) ? card.videos : []
+                };
+
+                // Заполняем форму редактирования
+                document.getElementById('editCardId').value = card.id;
+                document.getElementById('editTitle').value = card.title;
+                const editHeroPos = document.getElementById('editHeroPosition');
+                if (editHeroPos) {
+                    editHeroPos.value = card.hero_position || 'site-card';
+                }
+                // АРХИВ: document.getElementById('editAuthor').value = card.author_id || '';
+                
+                // Получаем ID доменов карточки
+                const cardDomainIds = card.site_domains?.map(sd => sd.domain_id).filter(id => id) || [];
+
+                // Показываем текущий thumbnail
+                const thumbSrc = editCardState.screenshots?.[0] || '';
+                if (thumbSrc) {
+                    document.getElementById('editThumbnailImg').src = thumbSrc;
+                    document.getElementById('editThumbnailPreview').style.display = 'block';
+                }
+
+                initEditThumbnailLibraryUI();
+                await loadThumbnailLibraryForEdit(card.id, thumbSrc);
+
+                // Текущее видео (используем videos[0])
+                const currentVideoUrl = editCardState.videos?.[0] || null;
+                const videoHint = document.getElementById('editVideoHint');
+                if (videoHint) {
+                    videoHint.textContent = currentVideoUrl ? `Видео задано: ${currentVideoUrl}` : 'Нет видео';
+                }
+
+                initEditVideoLibraryUI();
+                // Load library videos from Sections & Media (no upload needed)
+                await loadVideoLibraryForEdit(card.id, currentVideoUrl);
+
+                // АРХИВ: Загружаем авторов и домены в селекторы
+                // await loadAuthorsForEdit();
+                await loadDomainsForEdit(cardDomainIds);
+
+                // Показываем модальное окно
+                document.getElementById('editCardModal').classList.add('active');
+            } catch (error) {
+                console.error('Ошибка загрузки карточки:', error);
+                showMessage(`Ошибка: ${error.message}`, 'error');
+            }
+        }
+
+        // АРХИВ: Загрузка авторов для формы редактирования (закомментировано)
+        /*
+        async function loadAuthorsForEdit() {
+            const select = document.getElementById('editAuthor');
+            select.innerHTML = '<option value="">Не выбран</option>';
+            
+            authors.forEach(author => {
+                const option = document.createElement('option');
+                option.value = author.id;
+                option.textContent = author.name;
+                select.appendChild(option);
+            });
+        }
+        */
+
+        // Загрузка доменов для формы редактирования (мульти-выбор через чекбоксы)
+        async function loadDomainsForEdit(selectedDomainIds = []) {
+            const container = document.getElementById('editDomainsCheckboxContainer');
+            container.innerHTML = '';
+            
+            if (domains.length === 0) {
+                container.innerHTML = '<div style="color: #999; font-size: 14px;">Домены не найдены.</div>';
+                return;
+            }
+            
+            domains.forEach(domain => {
+                const label = document.createElement('label');
+                label.style.cssText = 'display:flex;flex-direction:row;align-items:center;gap:6px;padding:4px 0;cursor:pointer;font-size:14px;font-weight:400;color:#333;margin:0;';
+
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.value = domain.id;
+                checkbox.id = `edit_domain_${domain.id}`;
+                checkbox.className = 'edit-domain-checkbox';
+                if (selectedDomainIds.includes(domain.id)) checkbox.checked = true;
+
+                const span = document.createElement('span');
+                span.textContent = domain.name;
+
+                label.appendChild(checkbox);
+                label.appendChild(span);
+                container.appendChild(label);
+            });
+        }
+        
+        // Получить выбранные домены для редактирования (ID)
+        function getSelectedEditDomainIds() {
+            const checkboxes = document.querySelectorAll('.edit-domain-checkbox:checked');
+            return Array.from(checkboxes).map(cb => cb.value);
+        }
+
+        // Закрытие модального окна редактирования карточки
+        function closeEditCardModal() {
+            document.getElementById('editCardModal').classList.remove('active');
+            document.getElementById('editCardForm').reset();
+            document.getElementById('editThumbnailPreview').style.display = 'none';
+        }
+
+        // Сохранение изменений карточки
+        document.getElementById('editCardForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const cardId = document.getElementById('editCardId').value;
+            const title = document.getElementById('editTitle').value.trim();
+            const heroPosition = (document.getElementById('editHeroPosition')?.value || 'site-card').toString();
+            // АРХИВ: const authorId = document.getElementById('editAuthor').value || null;
+            const authorId = null; // Автор временно отключен
+            const selectedDomainIds = getSelectedEditDomainIds(); // Мульти-выбор доменов
+            const thumbnailFile = document.getElementById('editThumbnail').files[0];
+            const videoFile = document.getElementById('editVideo')?.files?.[0] || null;
+
+            if (!title) {
+                showTopToast('Введите название проекта', 'error');
+                showMessage('Введите название проекта', 'error');
+                return;
+            }
+
+            const submitBtn = this.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<span class="btn-loading"><span class="spinner dark"></span><span>Сохранение...</span></span>`;
+
+            try {
+                let thumbnailUrl = null;
+                let videoUrl = null;
+
+                // Если выбран новый thumbnail, загружаем его
+                if (thumbnailFile) {
+                    if (inspireR2UploadEnabled()) {
+                        thumbnailUrl = await uploadBlobToR2(thumbnailFile);
+                    } else {
+                        const thumbnailFileName = `thumbnails/${Date.now()}_${thumbnailFile.name}`;
+                        const { error: thumbnailError } = await supabase.storage
+                            .from('Medias')
+                            .upload(thumbnailFileName, thumbnailFile);
+                        if (thumbnailError) {
+                            throw new Error(`Ошибка загрузки thumbnail: ${thumbnailError.message}`);
+                        }
+                        const { data: { publicUrl } } = supabase.storage
+                            .from('Medias')
+                            .getPublicUrl(thumbnailFileName);
+                        thumbnailUrl = publicUrl;
+                    }
+                }
+
+                // Если выбрано новое видео, загружаем его
+                if (videoFile) {
+                    const validVideoTypes = ['video/mp4', 'video/webm', 'video/ogg', 'video/quicktime', 'video/x-msvideo'];
+                    if (videoFile.type && !validVideoTypes.includes(videoFile.type)) {
+                        throw new Error('Пожалуйста, выберите видео файл (mp4, webm, mov и др.)');
+                    }
+                    const maxSize = 500 * 1024 * 1024;
+                    if (typeof videoFile.size === 'number' && videoFile.size > maxSize) {
+                        throw new Error('Размер видео не должен превышать 500MB');
+                    }
+
+                    if (inspireR2UploadEnabled()) {
+                        videoUrl = await uploadBlobToR2(videoFile);
+                    } else {
+                        const videoFileName = `videos/${Date.now()}_${videoFile.name}`;
+                        const { error: videoError } = await supabase.storage
+                            .from('Medias')
+                            .upload(videoFileName, videoFile);
+                        if (videoError) {
+                            throw new Error(`Ошибка загрузки видео: ${videoError.message}`);
+                        }
+                        const { data: { publicUrl } } = supabase.storage
+                            .from('Medias')
+                            .getPublicUrl(videoFileName);
+                        videoUrl = publicUrl;
+                    }
+                }
+
+                // Генерируем slug из title при обновлении
+                const slug = generateSlug(title);
+                
+                // Обновляем карточку
+                const updateData = {
+                    title: title,
+                    slug: slug, // Обновляем slug при изменении title
+                    // АРХИВ: author_id: authorId, // Временно отключено
+                    // domain_id удален - домены теперь через card_categories
+                    hero_position: heroPosition,
+                    updated_at: new Date().toISOString()
+                };
+
+                if (thumbnailUrl) {
+                    // `sites.thumbnail_url` may not exist; store thumbnail as first screenshot
+                    const existing = Array.isArray(editCardState?.screenshots) ? editCardState.screenshots : [];
+                    const rest = existing.slice(1).filter(Boolean);
+                    updateData.screenshots = [thumbnailUrl, ...rest];
+                } else if (editSelectedLibraryThumbnailUrl) {
+                    const existing = Array.isArray(editCardState?.screenshots) ? editCardState.screenshots : [];
+                    const rest = existing.slice(1).filter(Boolean);
+                    updateData.screenshots = [editSelectedLibraryThumbnailUrl, ...rest];
+                }
+
+                if (videoUrl) {
+                    // prefer array used by frontend (index.html / project.html)
+                    updateData.videos = [videoUrl];
+                } else if (editSelectedLibraryVideoUrl) {
+                    updateData.videos = [editSelectedLibraryVideoUrl];
+                }
+
+                // Enforce limits for hero positions (same logic as create)
+                if (heroPosition === 'hero-big-card' || heroPosition === 'hero-small-card') {
+                    const maxCount = heroPosition === 'hero-big-card' ? 1 : 2;
+                    const { data: existing, error: exErr } = await supabase
+                        .from('sites')
+                        .select('id, hero_position')
+                        .eq('hero_position', heroPosition)
+                        .order('updated_at', { ascending: true });
+                    if (exErr) throw exErr;
+
+                    // exclude current card id from the count
+                    const others = (existing || []).filter(x => x.id !== cardId);
+                    if (others.length >= maxCount) {
+                        const toMove = others.slice(0, others.length - maxCount + 1);
+                        const idsToMove = toMove.map(p => p.id);
+                        await supabase
+                            .from('sites')
+                            .update({ hero_position: 'site-card' })
+                            .in('id', idsToMove);
+                    }
+                }
+
+                const { error: updateError } = await supabase
+                    .from('sites')
+                    .update(updateData)
+                    .eq('id', cardId);
+
+                if (updateError) {
+                    throw updateError;
+                }
+
+                // Обновляем связи с доменами через site_domains
+                // Сначала удаляем все существующие связи для этого сайта
+                const { error: deleteError } = await supabase
+                    .from('site_domains')
+                    .delete()
+                    .eq('site_id', cardId);
+
+                if (deleteError) {
+                    console.warn('Ошибка удаления старых доменов:', deleteError);
+                }
+
+                // Затем создаем новые связи
+                if (selectedDomainIds.length > 0) {
+                    const siteDomains = selectedDomainIds.map(domainId => ({
+                        site_id: cardId,
+                        domain_id: domainId
+                    }));
+
+                    const { error: categoriesError } = await supabase
+                        .from('site_domains')
+                        .insert(siteDomains);
+
+                    if (categoriesError) {
+                        console.warn('Ошибка сохранения доменов:', categoriesError);
+                    }
+                }
+
+                showTopToast('✅ Карточка успешно обновлена!', 'success');
+                showMessage('✅ Карточка успешно обновлена!', 'success');
+                closeEditCardModal();
+                loadCardsList(); // Обновляем список
+
+            } catch (error) {
+                console.error('Ошибка обновления карточки:', error);
+                showTopToast(`❌ Ошибка: ${error.message}`, 'error');
+                showMessage(`❌ Ошибка: ${error.message}`, 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Сохранить изменения';
+            }
+        });
+
+        // Удаление карточки
+        async function deleteCard(cardId, cardTitle) {
+            if (!confirm(`Вы уверены, что хотите удалить карточку "${cardTitle}"?\n\nЭто действие нельзя отменить.`)) {
+                return;
+            }
+
+            try {
+                // Удаляем сайт
+                const { error } = await supabase
+                    .from('sites')
+                    .delete()
+                    .eq('id', cardId);
+
+                if (error) {
+                    throw error;
+                }
+
+                showMessage('✅ Карточка успешно удалена!', 'success');
+                loadCardsList(); // Обновляем список
+
+            } catch (error) {
+                console.error('Ошибка удаления карточки:', error);
+                showMessage(`❌ Ошибка: ${error.message}`, 'error');
+            }
+        }
+
+        // Загрузка списка доменов для управления
+        async function loadDomainsList() {
+            const container = document.getElementById('domainsList');
+            container.innerHTML = '<div class="loading-spinner">Загрузка доменов...</div>';
+            
+            try {
+                // Перезагружаем домены
+                await loadDomains();
+
+                if (domains.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <h3>Домены не найдены</h3>
+                            <p>Создайте первый домен в разделе "Создание"</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = '<div class="domains-list"></div>';
+                const list = container.querySelector('.domains-list');
+
+                domains.forEach(domain => {
+                    const domainElement = document.createElement('div');
+                    domainElement.className = 'domain-item';
+                    domainElement.innerHTML = `
+                        <div class="domain-item-name">${domain.name}</div>
+                        <div class="domain-item-actions">
+                            <button class="btn-edit" onclick="editDomain('${domain.id}', '${domain.name.replace(/'/g, "\\'")}')">Редактировать</button>
+                            <button class="btn-delete" onclick="deleteDomain('${domain.id}', '${domain.name.replace(/'/g, "\\'")}')">Удалить</button>
+                        </div>
+                    `;
+                    list.appendChild(domainElement);
+                });
+
+            } catch (error) {
+                console.error('Ошибка загрузки доменов:', error);
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>Ошибка загрузки доменов</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Редактирование домена
+        function editDomain(domainId, domainName) {
+            document.getElementById('editDomainId').value = domainId;
+            document.getElementById('editDomainName').value = domainName;
+            document.getElementById('editDomainModal').classList.add('active');
+        }
+
+        // Закрытие модального окна редактирования домена
+        function closeEditDomainModal() {
+            document.getElementById('editDomainModal').classList.remove('active');
+            document.getElementById('editDomainForm').reset();
+        }
+
+        // Сохранение изменений домена
+        document.getElementById('editDomainForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const domainId = document.getElementById('editDomainId').value;
+            const domainName = document.getElementById('editDomainName').value.trim();
+
+            if (!domainName) {
+                showMessage('Введите название домена', 'error');
+                return;
+            }
+
+            const submitBtn = this.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Сохранение...';
+
+            try {
+                const { error } = await supabase
+                    .from('domains')
+                    .update({ name: domainName })
+                    .eq('id', domainId);
+
+                if (error) {
+                    if (error.code === '23505') {
+                        throw new Error('Домен с таким названием уже существует');
+                    }
+                    throw error;
+                }
+
+                showMessage('✅ Домен успешно обновлен!', 'success');
+                closeEditDomainModal();
+                await loadDomains(); // Обновляем список доменов
+                loadDomainsList(); // Обновляем список в интерфейсе
+
+            } catch (error) {
+                console.error('Ошибка обновления домена:', error);
+                showMessage(`❌ Ошибка: ${error.message}`, 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Сохранить изменения';
+            }
+        });
+
+        // Удаление домена
+        async function deleteDomain(domainId, domainName) {
+            if (!confirm(`Вы уверены, что хотите удалить домен "${domainName}"?\n\nЭто действие нельзя отменить.`)) {
+                return;
+            }
+
+            try {
+                // Проверяем, используется ли домен в сайтах (через site_domains)
+                const { count: usageCount, error: checkError } = await supabase
+                    .from('site_domains')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('domain_id', domainId);
+
+                if (checkError) {
+                    throw checkError;
+                }
+
+                if (usageCount && usageCount > 0) {
+                    if (!confirm(`Домен используется в ${usageCount} сайте(ах). При удалении домена связь будет разорвана. Продолжить?`)) {
+                        return;
+                    }
+                }
+
+                // Удаляем домен
+                const { error } = await supabase
+                    .from('domains')
+                    .delete()
+                    .eq('id', domainId);
+
+                if (error) {
+                    throw error;
+                }
+
+                showMessage('✅ Домен успешно удален!', 'success');
+                await loadDomains(); // Обновляем список доменов
+                loadDomainsList(); // Обновляем список в интерфейсе
+
+            } catch (error) {
+                console.error('Ошибка удаления домена:', error);
+                showMessage(`❌ Ошибка: ${error.message}`, 'error');
+            }
+        }
+
+        // Закрытие модальных окон по клику вне их
+        document.getElementById('editCardModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeEditCardModal();
+            }
+        });
+
+        document.getElementById('editDomainModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeEditDomainModal();
+            }
+        });
+
+        document.getElementById('sectionsModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeSectionsModal();
+            }
+        });
+
+        // Password Protection
+        const ADMIN_PASSWORD = '1337';
+
+        // Проверка пароля при загрузке страницы
+        function checkPasswordOnLoad() {
+            // #region agent log
+            fetch('http://127.0.0.1:7242/ingest/1be379df-9509-46b6-9dde-ca2487cf6696',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'admin.html:checkPasswordOnLoad',message:'Password check on load',data:{savedAuth:sessionStorage.getItem('admin_authenticated')},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
+            // #endregion
+            const savedAuth = sessionStorage.getItem('admin_authenticated');
+            if (savedAuth === 'true') {
+                showAdminContent();
+            } else {
+                showPasswordOverlay();
+            }
+        }
+
+        function showPasswordOverlay() {
+            document.getElementById('passwordOverlay').classList.add('active');
+            document.getElementById('adminContent').style.display = 'none';
+            document.getElementById('passwordInput').focus();
+        }
+
+        function showAdminContent() {
+            document.getElementById('passwordOverlay').classList.remove('active');
+            document.getElementById('adminContent').style.display = 'block';
+        }
+
+        function checkPassword() {
+            // #region agent log
+            fetch('http://127.0.0.1:7242/ingest/1be379df-9509-46b6-9dde-ca2487cf6696',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'admin.html:checkPassword',message:'Password check',data:{inputLength:document.getElementById('passwordInput')?.value?.length||0},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
+            // #endregion
+            const passwordInput = document.getElementById('passwordInput');
+            const passwordError = document.getElementById('passwordError');
+            const password = passwordInput.value;
+
+            if (password === ADMIN_PASSWORD) {
+                // #region agent log
+                fetch('http://127.0.0.1:7242/ingest/1be379df-9509-46b6-9dde-ca2487cf6696',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'admin.html:checkPassword',message:'Password correct',data:{timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
+                // #endregion
+                sessionStorage.setItem('admin_authenticated', 'true');
+                passwordError.classList.remove('show');
+                passwordInput.value = '';
+                showAdminContent();
+            } else {
+                // #region agent log
+                fetch('http://127.0.0.1:7242/ingest/1be379df-9509-46b6-9dde-ca2487cf6696',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'admin.html:checkPassword',message:'Password incorrect',data:{timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
+                // #endregion
+                passwordError.classList.add('show');
+                passwordInput.value = '';
+                passwordInput.focus();
+            }
+        }
+
+        // Обработка Enter в поле пароля
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordInput = document.getElementById('passwordInput');
+            if (passwordInput) {
+                passwordInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        checkPassword();
+                    }
+                });
+            }
+            checkPasswordOnLoad();
+        });
+
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Проверяем пароль перед инициализацией
+            const savedAuth = sessionStorage.getItem('admin_authenticated');
+            if (savedAuth !== 'true') {
+                return; // Не инициализируем, если не авторизован
+            }
+
+            if (typeof supabase === 'undefined') {
+                showMessage('Ошибка: Supabase не подключен! Проверьте supabase-config.js', 'error');
+                return;
+            }
+
+            // АРХИВ: await loadAuthors();
+            await loadDomains();
+        });
+    </script>
+</body>
+</html>
+

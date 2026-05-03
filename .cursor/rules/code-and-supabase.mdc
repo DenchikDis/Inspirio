@@ -1,0 +1,31 @@
+---
+description: Соглашения по коду и работе с Supabase в проекте Inspire
+globs: Page/**/*.html, sql/**/*.sql, supabase-config.js
+alwaysApply: false
+---
+
+# Код и Supabase — соглашения
+
+## Supabase
+
+- Клиент: подключается в HTML через `<script src="https://unpkg.com/@supabase/supabase-js@2"></script>` и `../supabase-config.js`. Использовать `window.supabase` или глобальный `supabase`.
+- В `.select()` **не** вставлять комментарии в строку запроса (например `-- АРХИВ: authors (*),`) — ломает PostgREST.
+- Домены (категории): таблица `categories`. Связь с карточкой — только через `card_categories` (card_id, category_id). Поле `domain_id` в `cards` не существует.
+- Проверка «используется ли категория» при удалении домена — запрос к `card_categories` по `category_id`, а не к `cards` по `domain_id`.
+- Storage: bucket **Medias**; пути вида `thumbnails/...`, `projects/...`.
+
+## HTML/JS в Page/
+
+- Навигация на детальную страницу проекта: `project.html?slug=${encodeURIComponent(slug)}` (или info.html по необходимости).
+- Slug карточки: из title — toLowerCase, только буквы/цифры/дефисы, пробелы → `-`, обрезка лишних дефисов.
+- Карточка с доменами: `card.card_categories?.map(cc => cc.categories).filter(c => c)` (или `cc.category_id` при необходимости). Не обращаться к несуществующему `card.domain_id`.
+- Автор: опционально. Проверять `card.authors && card.authors.id`; fallback — `card.author_name` / `card.author_image`; иначе скрыть блок автора.
+- Стили: корень — `design-tokens.css` (переменные Figma); админка дополнительно подключает `styles.css`. Шрифты: Inter, Roboto Flex на главной; Urbanist в админке.
+
+## Админка (admin.html)
+
+- Пароль хранится в коде; авторизация — `sessionStorage.admin_authenticated === 'true'`.
+- Создание карточки: валидация title, thumbnail, минимум одно изображение галереи (до 20), выбор хотя бы одного домена не обязателен, но типично выбирают. После сохранения: запись в cards, card_categories, project_images; загрузка файлов в Medias.
+- Редактирование карточки: обновление cards; для доменов — удалить старые строки в card_categories по card_id, вставить новые по выбранным category_id.
+- Удаление домена: проверка по `card_categories` (count по category_id); при наличии — confirm с числом карточек; затем delete из categories (CASCADE уберёт связи).
+- Один вызов `showMessage` на одно действие (не дублировать сообщения об успехе).

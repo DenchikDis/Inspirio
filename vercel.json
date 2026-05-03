@@ -1,0 +1,51 @@
+{
+  "version": 2,
+  "public": true,
+  "functions": {
+    "api/**/*.js": {
+      "memory": 1024,
+      "maxDuration": 60
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/Page/index.html"
+    },
+    {
+      "source": "/Page/project",
+      "destination": "/Page/project.html"
+    },
+    {
+      "source": "/Page/info",
+      "destination": "/Page/info.html"
+    },
+    {
+      "source": "/Page/admin",
+      "destination": "/Page/admin.html"
+    },
+    {
+      "source": "/Page/kit",
+      "destination": "/Page/kit.html"
+    },
+    {
+      "source": "/assets/:path*",
+      "destination": "/assets/:path*"
+    },
+    {
+      "source": "/:path*",
+      "destination": "/Page/:path*"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ]
+}
